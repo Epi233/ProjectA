@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="src\logic.h" />
+    <ClInclude Include="src\Components\DataPack.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Buffer.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\Util.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\Bool.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Pipe.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Port.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\Exception.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\logic.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{818bda21-9b38-44bb-98cc-300a713246d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{a2b55b6b-e303-4a25-9c27-c5df98db7a5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{3965b2bf-73f3-4aca-802e-dabd279f0aa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{712a38f5-3415-4163-88aa-caac5217d7a8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

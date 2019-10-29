@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{51528235-7FDD-4A7A-BB56-86C9B9241536}</ProjectGuid>
-    <RootNamespace>ProjectA</RootNamespace>
+    <ProjectGuid>{702F75FC-3345-4214-BE92-71612EDD591C}</ProjectGuid>
+    <RootNamespace>DRamSim2</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -39,13 +39,13 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -69,8 +69,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\ProjectA_Debug\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\ProjectA_Relase\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
@@ -78,7 +83,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
@@ -115,6 +120,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Bank.cpp" />
+    <ClCompile Include="src\BusPacket.cpp" />
+    <ClCompile Include="src\ClockDomain.cpp" />
+    <ClCompile Include="src\CommandQueue.cpp" />
+    <ClCompile Include="src\IniReader.cpp" />
+    <ClCompile Include="src\MemoryController.cpp" />
+    <ClCompile Include="src\MemorySystem.cpp" />
+    <ClCompile Include="src\MultiChannelMemorySystem.cpp" />
+    <ClCompile Include="src\PrintMacros.cpp" />
+    <ClCompile Include="src\Rank.cpp" />
+    <ClCompile Include="src\SimulatorObject.cpp" />
+    <ClCompile Include="src\Transaction.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AddressMapping.hpp" />
+    <ClInclude Include="src\Bank.h" />
+    <ClInclude Include="src\BankState.hpp" />
+    <ClInclude Include="src\BusPacket.h" />
+    <ClInclude Include="src\Callback.h" />
+    <ClInclude Include="src\ClockDomain.h" />
+    <ClInclude Include="src\CommandQueue.h" />
+    <ClInclude Include="src\CSVWriter.h" />
+    <ClInclude Include="src\IniReader.h" />
+    <ClInclude Include="src\MemoryController.h" />
+    <ClInclude Include="src\MemorySystem.h" />
+    <ClInclude Include="src\MultiChannelMemorySystem.h" />
+    <ClInclude Include="src\PrintMacros.h" />
+    <ClInclude Include="src\Rank.h" />
+    <ClInclude Include="src\SimulatorObject.h" />
+    <ClInclude Include="src\SystemConfiguration.h" />
+    <ClInclude Include="src\Transaction.h" />
+    <ClInclude Include="src\unistd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
