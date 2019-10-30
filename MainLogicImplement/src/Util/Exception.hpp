@@ -39,4 +39,13 @@ namespace ProjectA
 		vector<uint64_t> _outPortSpec;
 		vector<uint64_t> _inPortSpec;
 	};
+
+	class EnumClassError final : public exception
+	{
+	public:
+		EnumClassError(const string& e)
+			: exception(e.c_str())
+		{
+		}
+	};
 }

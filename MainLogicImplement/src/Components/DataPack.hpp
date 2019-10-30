@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "../Util/Bool.hpp"
 
 using std::vector;
@@ -13,23 +14,26 @@ namespace ProjectA
 	class Data final
 	{
 	public:
-		explicit
-		Data(uint32_t size)
+		explicit Data(uint32_t size)
 			: _data(vector<Bool>(size, false))
 		{
 		}
 
-		explicit
-		Data(uint64_t value)
+		explicit Data(uint64_t value)
 		{
 			// TODO
 		}
 
-		explicit
-		Data(int64_t value)
+		explicit Data(int64_t value)
 		{
 			// TODO
 		}
+
+		explicit Data(const string& str)
+		{
+			
+		}
+		
 
 		string toString() const
 		{
@@ -80,6 +84,16 @@ namespace ProjectA
 		bool isSameType(const DataPack& dataPack) const
 		{
 			return _widthSpec == dataPack._widthSpec;
+		}
+
+		vector<string> toString() const
+		{
+			vector<string> result(_dataPack.size());
+			for (size_t i = 0; i < _dataPack.size(); i++)
+			{
+				result[i] = _dataPack[i].toString();
+			}
+			return result;
 		}
 
 	private:

@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\CompoentInterface.hpp" />
     <ClInclude Include="src\Components\LogicUnit.hpp" />
     <ClInclude Include="src\Components\MemUnit.hpp" />
     <ClInclude Include="src\Components\DataPack.hpp" />
