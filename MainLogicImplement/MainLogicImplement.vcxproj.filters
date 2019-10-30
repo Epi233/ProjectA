@@ -5,23 +5,26 @@
     <ClInclude Include="src\Components\DataPack.hpp">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Buffer.hpp">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\Util\Util.hpp">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="src\Util\Bool.hpp">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Pipe.hpp">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\Components\Port.hpp">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Util\Exception.hpp">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\MemUnit.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\DataBase.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\LogicUnit.hpp">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

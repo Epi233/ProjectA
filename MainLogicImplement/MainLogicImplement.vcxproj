@@ -128,9 +128,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Components\Buffer.hpp" />
+    <ClInclude Include="src\Components\LogicUnit.hpp" />
+    <ClInclude Include="src\Components\MemUnit.hpp" />
     <ClInclude Include="src\Components\DataPack.hpp" />
-    <ClInclude Include="src\Components\Pipe.hpp" />
+    <ClInclude Include="src\Components\DataBase.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />
     <ClInclude Include="src\logic.h" />
     <ClInclude Include="src\Util\Bool.hpp" />
