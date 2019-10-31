@@ -10,6 +10,15 @@ namespace ProjectA
 	using std::vector;
 	using std::string;
 	using std::exception;
+
+	class DataSizeMismatchError final : public exception
+	{
+	public:
+		DataSizeMismatchError(const string& e)
+			: exception(e.c_str())
+		{
+		}
+	};
 	
 	class PortSpecMismatchError final : public exception
 	{
@@ -44,6 +53,15 @@ namespace ProjectA
 	{
 	public:
 		EnumClassError(const string& e)
+			: exception(e.c_str())
+		{
+		}
+	};
+
+	class LuaLoadError final : public exception
+	{
+	public:
+		LuaLoadError(const string& e)
 			: exception(e.c_str())
 		{
 		}

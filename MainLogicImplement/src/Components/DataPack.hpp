@@ -1,77 +1,116 @@
 #pragma once
 
-#include <cstdint>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include "../Util/Bool.hpp"
-
-using std::vector;
-using std::string;
+#include "../Define/Define.hpp"
+#include "../Util/Exception.hpp"
 
 namespace ProjectA
 {
-	class Data final
+	using WidthSpec = vector<uint64_t>;
+
+	class Data
 	{
 	public:
-		explicit Data(uint32_t size)
-			: _data(vector<Bool>(size, false))
+		explicit Data(uint64_t size)
+			: _size(size)
+			, _dataBinary(_size, '0')
 		{
 		}
 
-		explicit Data(uint64_t value)
+		Data(uint64_t size, int64_t data)
+			: _size(size)
 		{
-			// TODO
+			generateFromNumber(data);
 		}
 
-		explicit Data(int64_t value)
+		Data(uint64_t size, uint64_t data)
+			: _size(size)
 		{
-			// TODO
+			generateFromNumber(data);
 		}
 
-		explicit Data(const string& str)
+		Data(uint64_t size, const string& data)
+			: _size(size)
 		{
-			
-		}
-		
-
-		string toString() const
-		{
-			string result = "";
-			for (size_t i = _data.size() - 1; i > 0; --i)
-				result += _data[i] ? '1' : '0';
-			return result;
+			stringBinaryCheck(data);
+			generateFromString(data);
 		}
 
-		uint64_t toUnsignedValue() const
+		Data(const Data& rhs) = default;
+
+		Data& operator= (const Data& data)
 		{
-			// TODO
+			if (_size != data._size)
+				throw DataSizeMismatchError("Data Size Mismatch");
+			_dataBinary = data._dataBinary;
+			return *this;
 		}
 
-		int64_t toSignedValue() const
+		template <typename Type>
+		Type getData() const
 		{
-			// TODO
+			throw exception(("Can not convert to type " + static_cast<string>(typeid(Type).name())).c_str());
 		}
 
-		uint64_t getWidth() const
+		// GCC可能不支持类内特化，移植的时候需要注意		
+		template <>
+		uint64_t getData() const
 		{
-			return _data.size();
+			return bitset<64>(_dataBinary).to_ullong();
 		}
 
-		bool isSameWidth(const Data& data) const
+		template <>
+		int64_t getData() const
 		{
-			return _data.size() == data.getWidth();
+			return static_cast<int64_t>(bitset<64>(_dataBinary).to_ullong());
+		}
+
+		template <>
+		string getData() const
+		{
+			return _dataBinary;
 		}
 
 	private:
-		vector<Bool> _data;
+		void generateFromNumber(int64_t data)
+		{
+			generateFromString(bitset<64>(data).to_string());
+		}
+
+		void generateFromNumber(uint64_t data)
+		{
+			generateFromString(bitset<64>(data).to_string());
+		}
+
+		// 检查一个string是不是01序列
+		void stringBinaryCheck(const string& str)
+		{
+			for (auto i : str)
+				if (i != '0' && i != '1')
+					throw exception("Binary String is not only 0 and 1");
+		}
+
+		void generateFromString(const string& str)
+		{
+			// 输入string必须是一个01序列
+			auto itr = str.end();
+			--itr;
+			for (size_t i = _size - 1; i >= 0; --i)
+			{
+				_dataBinary[i] = *itr;
+				--itr;
+			}
+		}
+
+	private:
+		uint64_t _size;
+		string _dataBinary;
 	};
 	
 	class DataPack
 	{
 	public:
 		explicit 
-		DataPack(vector<uint64_t> widthSpec)
+		DataPack(WidthSpec widthSpec)
 			: _widthSpec(std::move(widthSpec))
 		{
 			_dataPack.reserve(_widthSpec.size());
@@ -86,18 +125,8 @@ namespace ProjectA
 			return _widthSpec == dataPack._widthSpec;
 		}
 
-		vector<string> toString() const
-		{
-			vector<string> result(_dataPack.size());
-			for (size_t i = 0; i < _dataPack.size(); i++)
-			{
-				result[i] = _dataPack[i].toString();
-			}
-			return result;
-		}
-
 	private:
 		vector<Data> _dataPack;
-		vector<uint64_t> _widthSpec;
+		WidthSpec _widthSpec;
 	};
 }

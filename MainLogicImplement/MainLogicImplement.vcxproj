@@ -89,7 +89,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\ProjectA_Debug\include\Lua;$(SolutionDir)\ProjectA_Debug\include\TinyXml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ProjectA_Debug\include\LuaBridge;$(SolutionDir)\ProjectA_Debug\include\Lua;$(SolutionDir)\ProjectA_Debug\include\TinyXml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>LOGIC_DLLEXPORT;lua.lib;tinyXml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -118,7 +118,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\ProjectA_Relase\include\TinyXml2;$(SolutionDir)\ProjectA_Relase\include\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ProjectA_Relase\include\LuaBridge;$(SolutionDir)\ProjectA_Relase\include\TinyXml2;$(SolutionDir)\ProjectA_Relase\include\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -134,14 +134,12 @@
     <ClInclude Include="src\Components\DataPack.hpp" />
     <ClInclude Include="src\Components\DataBase.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />
-    <ClInclude Include="src\logic.h" />
-    <ClInclude Include="src\Util\Bool.hpp" />
+    <ClInclude Include="src\Define\Define.hpp" />
     <ClInclude Include="src\Util\Exception.hpp" />
     <ClInclude Include="src\Util\Util.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\logic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DRamSim2\DRamSim2.vcxproj">

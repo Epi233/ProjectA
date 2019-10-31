@@ -15,7 +15,7 @@ namespace ProjectA
 #define STACK ComponentType::stack
 #define MEM ComponentType::memoryFile
 
-	class ComponentInterface
+	Interface ComponentInterface
 	{
 	public:
 		virtual  ~ComponentInterface() = default;

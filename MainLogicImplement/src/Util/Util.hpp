@@ -59,6 +59,24 @@ namespace ProjectA
 	template <class Typename>
 	Typename* Singleton<Typename>::_instance = nullptr;
 
+	class NonCopyable
+	{
+	protected:
+		NonCopyable() = default;
+		~NonCopyable() = default;
+		NonCopyable(const NonCopyable& rhs) = delete;
+		NonCopyable& operator= (const NonCopyable& rhs) = delete;
+	};
+
+	class NonMovable
+	{
+	protected:
+		NonMovable() = default;
+		~NonMovable() = default;
+		NonMovable(NonMovable&& rhs) = delete;
+		NonMovable& operator= (NonMovable&& rhs) = delete;
+	};
+
 	class Util final
 	{
 	public:
