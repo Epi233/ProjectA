@@ -65,7 +65,7 @@ namespace ProjectA
 
 		void setLuaBridge() override
 		{
-			Component<MEM>& mem = *_mem;
+			
 
 
 			

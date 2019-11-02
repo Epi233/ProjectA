@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include <ClassInfo.h>
+#include "ClassInfo.h"
 
 #include <cassert>
 #include <stdexcept>

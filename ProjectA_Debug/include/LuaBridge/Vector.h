@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <detail/Stack.h>
+#include "detail/Stack.h"
 
 #include <vector>
 

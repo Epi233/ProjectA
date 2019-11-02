@@ -16,27 +16,29 @@ namespace ProjectA
 	class DataBase
 	{
 	public:
-		template<ComponentType Type>
-		static void insertComponent(const string& str, Component<Type>* ptr)
+		~DataBase()
 		{
-			if (Type == FIFO)
-				_fifoDataBase[str] = ptr;
-			else if (Type == STACK)
-				_stackDataBase[str] = ptr;
-			else if (Type == MEM)
-				_memDataBase[str] = ptr;
-			else
-				throw EnumClassError("Database insertion enum class error");
+			for (auto itr = _fifoDataBase.begin(); itr != _fifoDataBase.end(); ++itr)
+				delete itr->second;
+			for (auto itr = _stackDataBase.begin(); itr != _stackDataBase.end(); ++itr)
+				delete itr->second;
+			for (auto itr = _memDataBase.begin(); itr != _memDataBase.end(); ++itr)
+				delete itr->second;
+		}
+		
+	public:
+		
+		void insertComponentMem(const string& str, uint64_t size, vector<WidthSpec> widthSpec)
+		{
+			_memDataBase[str] = new Component<MEM>(size, widthSpec);
 		}
 
 		// MemFile²Ù×÷½Ó¿Ú
-		
-		
 
 	private:
-		static unordered_map<string, Component<FIFO>*> _fifoDataBase;
-		static unordered_map<string, Component<STACK>*> _stackDataBase;
-		static unordered_map<string, Component<MEM>*> _memDataBase;
+		unordered_map<string, Component<FIFO>*> _fifoDataBase;
+		unordered_map<string, Component<STACK>*> _stackDataBase;
+		unordered_map<string, Component<MEM>*> _memDataBase;
 	};
 	
 }

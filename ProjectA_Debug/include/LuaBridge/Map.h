@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <detail/Stack.h>
-#include <detail/dump.h>
+#include "detail/Stack.h"
+#include "detail/dump.h"
 
 #include <map>
 

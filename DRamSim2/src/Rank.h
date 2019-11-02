@@ -38,7 +38,7 @@
 #include "BusPacket.h"
 #include "SystemConfiguration.h"
 #include "Bank.h"
-#include "BankState.hpp"
+#include "BankState.h"
 
 using namespace std;
 using namespace DRAMSim;

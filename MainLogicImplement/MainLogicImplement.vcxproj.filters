@@ -28,6 +28,12 @@
     <ClInclude Include="src\Define\Define.hpp">
       <Filter>Define</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\Data.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Module.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -48,5 +54,13 @@
     <Filter Include="Define">
       <UniqueIdentifier>{06ad570f-af04-4b09-b9ef-a2b0a5e98251}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{c98b8a0b-f257-4025-a8c0-981ba0d7feae}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="src\Components\Config.xml">
+      <Filter>Config</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

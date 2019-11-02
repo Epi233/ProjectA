@@ -71,9 +71,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\ProjectA_Debug\</OutDir>
+    <IntDir>$(SolutionDir)\ProjectA_Debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\ProjectA_Relase\</OutDir>
+    <IntDir>$(SolutionDir)\ProjectA_Relase\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -92,7 +94,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\ProjectA_Debug\include\LuaBridge;$(SolutionDir)\ProjectA_Debug\include\Lua;$(SolutionDir)\ProjectA_Debug\include\TinyXml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>LOGIC_DLLEXPORT;lua.lib;tinyXml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua.lib;tinyXml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\ProjectA_Debug\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -129,10 +131,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Components\CompoentInterface.hpp" />
+    <ClInclude Include="src\Components\Data.hpp" />
     <ClInclude Include="src\Components\LogicUnit.hpp" />
     <ClInclude Include="src\Components\MemUnit.hpp" />
     <ClInclude Include="src\Components\DataPack.hpp" />
     <ClInclude Include="src\Components\DataBase.hpp" />
+    <ClInclude Include="src\Components\Module.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />
     <ClInclude Include="src\Define\Define.hpp" />
     <ClInclude Include="src\Util\Exception.hpp" />
@@ -145,6 +149,9 @@
     <ProjectReference Include="..\DRamSim2\DRamSim2.vcxproj">
       <Project>{702f75fc-3345-4214-be92-71612edd591c}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="src\Components\Config.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

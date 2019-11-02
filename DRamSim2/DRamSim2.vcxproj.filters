@@ -6,7 +6,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AddressMapping.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Bank.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BankState.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\BusPacket.cpp">
@@ -44,7 +50,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AddressMapping.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Bank.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BankState.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\BusPacket.h">
@@ -92,10 +104,7 @@
     <ClInclude Include="src\unistd.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\AddressMapping.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BankState.hpp">
+    <ClInclude Include="src\DllDefine.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

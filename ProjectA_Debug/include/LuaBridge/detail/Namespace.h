@@ -30,11 +30,11 @@
 
 #pragma once
 
-#include <Config.h>
-#include <ClassInfo.h>
-#include <LuaException.h>
-#include <Security.h>
-#include <TypeTraits.h>
+#include "Config.h"
+#include "ClassInfo.h"
+#include "LuaException.h"
+#include "Security.h"
+#include "TypeTraits.h"
 
 #include <stdexcept>
 #include <string>

@@ -43,17 +43,17 @@
 #endif
 
 
-#include <detail/LuaHelpers.h>
-#include <detail/TypeTraits.h>
-#include <detail/TypeList.h>
-#include <detail/FuncTraits.h>
-#include <detail/Constructor.h>
-#include <detail/ClassInfo.h>
-#include <detail/LuaException.h>
-#include <detail/LuaRef.h>
-#include <detail/Iterator.h>
-#include <detail/Userdata.h>
-#include <detail/CFunctions.h>
-#include <detail/Security.h>
-#include <detail/Stack.h>
-#include <detail/Namespace.h>
+#include "detail/LuaHelpers.h"
+#include "detail/TypeTraits.h"
+#include "detail/TypeList.h"
+#include "detail/FuncTraits.h"
+#include "detail/Constructor.h"
+#include "detail/ClassInfo.h"
+#include "detail/LuaException.h"
+#include "detail/LuaRef.h"
+#include "detail/Iterator.h"
+#include "detail/Userdata.h"
+#include "detail/CFunctions.h"
+#include "detail/Security.h"
+#include "detail/Stack.h"
+#include "detail/Namespace.h"

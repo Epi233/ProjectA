@@ -40,7 +40,7 @@
 
 //#define LUABRIDGE_COMPILER_SUPPORTS_MOVE_SEMANTICS 1
 
-#include <detail/TypeTraits.h>
+#include "detail/TypeTraits.h"
 
 #include <cassert>
 

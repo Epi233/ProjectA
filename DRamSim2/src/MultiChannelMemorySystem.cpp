@@ -36,7 +36,7 @@
 #include <direct.h>
 
 #include "MultiChannelMemorySystem.h"
-#include "AddressMapping.hpp"
+#include "AddressMapping.h"
 #include "IniReader.h"
 
 

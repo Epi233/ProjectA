@@ -34,12 +34,13 @@
 #include "IniReader.h"
 #include "ClockDomain.h"
 #include "CSVWriter.h"
+#include "DllDefine.h"
 
 
 namespace DRAMSim {
 
 
-class MultiChannelMemorySystem : public SimulatorObject 
+class DLL_API MultiChannelMemorySystem : public SimulatorObject
 {
 	public: 
 

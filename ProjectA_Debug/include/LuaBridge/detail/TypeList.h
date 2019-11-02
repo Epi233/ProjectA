@@ -45,8 +45,8 @@
 
 #pragma once
 
-#include <Config.h>
-#include <Stack.h>
+#include "Config.h"
+#include "Stack.h"
 
 #include <string>
 #include <typeinfo>

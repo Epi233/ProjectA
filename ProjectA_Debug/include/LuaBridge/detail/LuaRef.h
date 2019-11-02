@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include <LuaException.h>
-#include <Stack.h>
+#include "LuaException.h"
+#include "Stack.h"
 
 #include <iostream>
 #include <string>

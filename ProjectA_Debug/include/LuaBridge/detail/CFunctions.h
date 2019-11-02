@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include <Config.h>
-#include <FuncTraits.h>
+#include "Config.h"
+#include "FuncTraits.h"
 
 #include <string>
 
