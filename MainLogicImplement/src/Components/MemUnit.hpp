@@ -50,6 +50,7 @@ namespace ProjectA
 		{
 			_memFile[addr] = data;
 		}
+		
 
 	private:
 		vector<DataPack> _memFile;

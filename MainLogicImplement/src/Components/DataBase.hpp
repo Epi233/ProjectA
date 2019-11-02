@@ -12,33 +12,52 @@ using std::unordered_map;
 
 namespace ProjectA
 {
-
-	class DataBase
+	class Database : public Singleton<Database>
 	{
 	public:
-		~DataBase()
+		struct DatabaseModule
 		{
-			for (auto itr = _fifoDataBase.begin(); itr != _fifoDataBase.end(); ++itr)
-				delete itr->second;
-			for (auto itr = _stackDataBase.begin(); itr != _stackDataBase.end(); ++itr)
-				delete itr->second;
-			for (auto itr = _memDataBase.begin(); itr != _memDataBase.end(); ++itr)
-				delete itr->second;
+			unordered_map<string, Component<FIFO>*> fifoDatabase;
+			unordered_map<string, Component<STACK>*> stackDatabase;
+			unordered_map<string, Component<MEM>*> memDatabase;
+		};
+
+	public:
+		~Database()
+		{
+			for (auto& everyDatabaseModuleItr : _database)
+			{
+				for (auto& itr : everyDatabaseModuleItr.second.fifoDatabase)
+					delete itr.second;
+				for (auto& itr : everyDatabaseModuleItr.second.stackDatabase)
+					delete itr.second;
+				for (auto& itr : everyDatabaseModuleItr.second.memDatabase)
+					delete itr.second;
+			}
 		}
 		
 	public:
-		
-		void insertComponentMem(const string& str, uint64_t size, vector<WidthSpec> widthSpec)
+		// Mem 相关接口
+		void insertComponentMem(const string& moduleName, const string& memName, uint64_t size, vector<WidthSpec> widthSpec)
 		{
-			_memDataBase[str] = new Component<MEM>(size, widthSpec);
+			_database[moduleName].memDatabase[memName] = new Component<MEM>(size, widthSpec);
 		}
 
-		// MemFile操作接口
+		DataPack readMem(const string& moduleName, const string& memName, uint64_t addr)
+		{
+			return _database[moduleName].memDatabase[memName]->readFile(addr);
+		}
+
+		void writeMem(const string& moduleName, const string& memName, uint64_t addr, DataPack& data)
+		{
+			_database[moduleName].memDatabase[memName]->writeFile(addr, data);
+		}
 
 	private:
-		unordered_map<string, Component<FIFO>*> _fifoDataBase;
-		unordered_map<string, Component<STACK>*> _stackDataBase;
-		unordered_map<string, Component<MEM>*> _memDataBase;
+		Database() = default;
+
+	private:
+		unordered_map<string, DatabaseModule> _database;
 	};
 	
 }

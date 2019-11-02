@@ -1,7 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config>
-    <DataType name="32b1v" spec=""/>
+    <DataType name="32d1v" spec="[32][1]"/>
+    <DataType name="32d1v1b" spec="[32][1][1]" />
+
     <Module name="PE">
-        
+
+        <InPort specName="32d1v"/>
+        <InPort specName="32d1v"/>
+        <InPort specName="32d1v"/>
+        <OutPort specName="32d1v1b"/>
+
+        <LogicUnit name="inBuffer1">
+            <InPort specName="32d1v"/>
+            <OutPort specName="32d1v1b"/>
+            <Lua type="MEM">
+                <Script name="inBuffer1.lua" />
+                <Parameter size="5" specName="32d1v" />
+            </Lua>
+        </LogicUnit>
+
+        <LogicUnit name="inBuffer2">
+            <InPort specName="32d1v"/>
+            <OutPort specName="32d1v1b"/>
+            <Lua type="MEM">
+                <Script name="inBuffer2.lua" />
+                <Parameter size="5" specName="32d1v" />
+            </Lua>
+        </LogicUnit>
+
+        <LogicUnit name="inBuffer3">
+            <InPort specName="32d1v"/>
+            <OutPort specName="32d1v1b"/>
+            <Lua type="MEM">
+                <Script name="inBuffer3.lua" />
+                <Parameter size="5" specName="32d1v" />
+            </Lua>
+        </LogicUnit>
+
+        <LogicUnit name="outBuffer">
+            <InPort specName="32d1v1b"/>
+            <OutPort specName="32d1v1b"/>
+            <Lua type="MEM">
+                <Script name="outBuffer.lua" />
+                <Parameter size="5" specName="32d1v" />
+            </Lua>
+        </LogicUnit>
     </Module>
 </Config>
