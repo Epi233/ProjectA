@@ -1,8 +1,17 @@
+/*
+ * Database每个Module一个
+ * 用来存这个Module所有的块
+ * 每个类型的块可以又多个，靠不同名称索引
+ * 因此每个块的逻辑脚本都可以访问同Module下所有的块内容
+ * 同时这个Database也提供LuaBridge用的接口
+ *
+ * 行 2019.11.5
+ */
 #pragma once
 
 #include "../Util/Util.hpp"
 #include "../Util/Exception.hpp"
-#include "DataPack.hpp"
+#include "Data.hpp"
 #include "Port.hpp"
 #include "MemUnit.hpp"
 #include "CompoentInterface.hpp"
@@ -50,14 +59,14 @@ namespace ProjectA
 		// Mem
 		vector<uint64_t> readMem(const string& memName, uint64_t addr)
 		{
-			const DataPack& dataPack =  _memDatabase[memName]->readFile(addr);
+			const Data& data =  _memDatabase[memName]->readFile(addr);
 			vector<uint64_t> result;
-			for (auto& i : dataPack)
+			for (auto& i : data.getDataCells())
 				result.push_back(i.getData<uint64_t>());
 			return result;
 		}
 
-		void writeMem(const string& memName, uint64_t addr, const DataPack& data)
+		void writeMem(const string& memName, uint64_t addr, const Data& data)
 		{
 			_memDatabase[memName]->writeFile(addr, data);
 		}

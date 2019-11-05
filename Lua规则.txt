@@ -1,0 +1,5 @@
+LogicUnit<MEM> 规则
+注册的内容：
+Database类 readMem函数 writeMem函数
+全局变量 database
+全局变量 inputData

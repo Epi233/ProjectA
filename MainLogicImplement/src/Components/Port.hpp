@@ -1,5 +1,20 @@
 /*
- * 
+ * Port类
+ * 并不是物理硬件意义上的端口
+ * 而是用来组织连接不同模块的一个抽象概念
+ * 同时物理上的打拍子功能也靠Port实现
+ *
+ * 每个Port分三个区
+ * 准备区 缓冲区 发送区
+ *
+ * 每个Clk对Port执行的事情为
+ * 若Port不打拍子
+ * 准备区数据进去发送区，缓冲区没用
+ * 若打拍子
+ * 缓冲区数据进去发送区
+ * 准备区数据进去缓冲区
+ *
+ * 行 2019.11.5
  */
 #pragma once
 
@@ -34,7 +49,7 @@ namespace ProjectA
 			_prepareArea = data;
 		}
 
-		void goFlow()
+		void run()
 		{
 			if (_isBuffered)
 			{

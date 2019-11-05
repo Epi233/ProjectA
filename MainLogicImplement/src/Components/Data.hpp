@@ -74,6 +74,11 @@ namespace ProjectA
 			_dataCells.emplace_back(size, std::forward<string>(data));
 		}
 
+		const vector<DataCell>& getDataCells() const
+		{
+			return _dataCells;
+		}
+
 	private:
 		vector<DataCell> _dataCells;
 	};
