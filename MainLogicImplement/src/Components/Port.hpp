@@ -1,73 +1,70 @@
+/*
+ * 
+ */
 #pragma once
 
-#include "DataPack.hpp"
+#include "Data.hpp"
 #include "../Util/Exception.hpp"
 
 namespace ProjectA
 {
 	
-	enum class PortDirection : char
-	{
-		in,
-		out
-	};
-
-	template <PortDirection D>
 	class Port
 	{
-	};
-
-#define IN PortDirection::in
-#define OUT PortDirection::out
-
-	template<>
-	class Port<IN>
-	{
 	public:
-		explicit Port(vector<uint64_t> widthSpec)
-			: _widthSpec(widthSpec)
+		Port(bool isBuffered, WidthSpec widthSpec)
+			: _isBuffered(isBuffered)
+			, _prepareArea(widthSpec)
+			, _bufferArea(widthSpec)
+			, _sendArea(widthSpec)
+			, _isTargetSet(false)
+			, _target(nullptr)
 		{
 		}
 
-		vector<uint64_t> getWidthSpec() const
+		void setTargetPort(Port* target)
 		{
-			return _widthSpec;
+			DEBUG_ASSERT(target != nullptr);
+			_isTargetSet = true;
+			_target = target;
+		}
+
+		void setPrepareArea(const Data& data)
+		{
+			_prepareArea = data;
+		}
+
+		void goFlow()
+		{
+			if (_isBuffered)
+			{
+				_sendArea = _bufferArea;
+				_bufferArea = _prepareArea;
+			}
+			else
+			{
+				_sendArea = _prepareArea;
+			}
+			if (_isTargetSet)
+			{
+				_target->setPrepareArea(_sendArea);
+			}
+		}
+
+		Data getSendArea() const
+		{
+			return _sendArea;
 		}
 
 	private:
-		const vector<uint64_t> _widthSpec;
+		bool _isBuffered;
+
+		Data _prepareArea;
+		Data _bufferArea;
+		Data _sendArea;
+
+		bool _isTargetSet;
+		Port* _target;
 	};
 
-	template<>
-	class Port<OUT>
-	{
-	public:
-		explicit Port(vector<uint64_t> widthSpec)
-			: _widthSpec(widthSpec)
-			, _toOut(nullptr)
-		{
-		}
-
-		void setToPort(const Port<IN>* ptr)
-		{
-			if (_widthSpec != ptr->getWidthSpec())
-				throw PortSpecMismatchError("Error", ptr->getWidthSpec(), _widthSpec);
-			_toOut = ptr;
-		}
-
-		vector<uint64_t> getWidthSpec() const
-		{
-			return _widthSpec;
-		}
-
-	private:
-		const vector<uint64_t> _widthSpec;
-		const Port<IN>* _toOut;
-	};
-
-	
-
-	
-
-	
 }

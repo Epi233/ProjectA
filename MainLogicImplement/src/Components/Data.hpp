@@ -1,103 +1,81 @@
+/*
+ * Data是由DataCell组成的数据
+ * 是流程中数据传递的基本单位
+ * WidthSpec是Data中每一个Cell的size组成的vector
+ *
+ * Data的构造必须指明WidthSpec
+ * Data的赋值会自动检查Data的size匹配与Data中每一个Cell的size匹配
+ * 
+ */
 #pragma once
 
 #include "../Define/Define.hpp"
 #include "../Util/Exception.hpp"
+#include "DataCell.hpp"
 
 namespace ProjectA
 {
+	using WidthSpec = vector<uint64_t>;
+
 	class Data
 	{
 	public:
-		explicit Data(uint64_t size)
-			: _size(size)
-			, _dataBinary(_size, '0')
+		explicit Data(const WidthSpec& spec)
+			: _dataCells(vector<DataCell>{})
 		{
-		}
-
-		Data(uint64_t size, uint64_t data)
-			: _size(size)
-		{
-			generateFromNumber(data);
-		}
-
-		Data(uint64_t size, const std::string& data)
-			: _size(size)
-		{
-			stringBinaryCheck(data);
-			generateFromString(data);
+			for (auto size : spec)
+				_dataCells.emplace_back(size);
 		}
 
 		Data(const Data& rhs) = default;
 
-		Data& operator= (const Data& data)
+		Data& operator= (const Data& rhs)
 		{
-			if (_size != data._size)
-				throw std::exception("Data Size Mismatch");
-			_dataBinary = data._dataBinary;
+			if (_dataCells.size() != rhs._dataCells.size())
+				throw DataSizeMismatchError("Data Size Mismatch");
+			for (size_t i = 0; i < _dataCells.size(); ++i)
+				_dataCells[i] = rhs._dataCells[i];
 			return *this;
 		}
 
-		template <typename Type>
-		Type getData() const
+	public:
+		DataCell& operator[] (size_t num)
 		{
-			throw std::exception(("Can not convert to type " + static_cast<std::string>(typeid(Type).name())).c_str());
+			return _dataCells[num];
 		}
 
-		// GCC可能不支持类内特化，移植的时候需要注意		
-		template <>
-		uint64_t getData() const
+		void push_back(const DataCell& dataCell)
 		{
-			return std::bitset<64>(_dataBinary).to_ullong();
+			_dataCells.push_back(dataCell);
 		}
 
-		template <>
-		int64_t getData() const
+		void push_back(DataCell&& dataCell)
 		{
-			return static_cast<int64_t>(std::bitset<64>(_dataBinary).to_ullong());
+			_dataCells.push_back(std::forward<DataCell>(dataCell));
 		}
 
-		template <>
-		std::string getData() const
+		void emplace_back(uint64_t size)
 		{
-			return _dataBinary;
+			_dataCells.emplace_back(size);
 		}
 
-	private:
-		void generateFromNumber(int64_t data)
+		void emplace_back(uint64_t size, uint64_t data)
 		{
-			generateFromString(std::bitset<64>(data).to_string());
+			_dataCells.emplace_back(size, data);
 		}
 
-		void generateFromNumber(uint64_t data)
+		void emplace_back(uint64_t size, const string& data)
 		{
-			generateFromString(std::bitset<64>(data).to_string());
+			_dataCells.emplace_back(size, data);
 		}
 
-		// 检查一个string是不是01序列
-		void stringBinaryCheck(const std::string& str)
+		void emplace_back(uint64_t size, string&& data)
 		{
-			for (auto i : str)
-				if (i != '0' && i != '1')
-					throw std::exception("Binary String is not only 0 and 1");
-		}
-
-		void generateFromString(const std::string& str)
-		{
-			_dataBinary = "";
-			// 输入string必须是一个01序列
-			auto itr = str.end();
-			--itr;
-			uint64_t count = _size;
-			while (count--)
-			{
-				_dataBinary += *itr;
-				--itr;
-			}
-			std::reverse(_dataBinary.begin(), _dataBinary.end());
+			_dataCells.emplace_back(size, std::forward<string>(data));
 		}
 
 	private:
-		uint64_t _size;
-		std::string _dataBinary;
+		vector<DataCell> _dataCells;
 	};
+	
 }

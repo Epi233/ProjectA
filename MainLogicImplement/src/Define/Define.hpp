@@ -95,5 +95,6 @@ namespace ProjectA
 
 #define Bool Bool
 #define Interface struct
+#define DEBUG_ASSERT(x) if ( !((void)0,(x))) { __debugbreak(); }
 
 }

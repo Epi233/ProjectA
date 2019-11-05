@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "Components/Data.hpp"
+#include "Components/DataCell.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -12,8 +12,8 @@ namespace MainLogicTest
 		
 		TEST_METHOD(dataTest)
 		{
-			ProjectA::Data data1(5, 500);
-			ProjectA::Data data2(5, 500);
+			ProjectA::DataCell data1(5, 500);
+			ProjectA::DataCell data2(5, 500);
 			string data1Str = data1.getData<string>();
 			string data2Str = data2.getData<string>();
 			Logger::WriteMessage(data1Str.c_str());

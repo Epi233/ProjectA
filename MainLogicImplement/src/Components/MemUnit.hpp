@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DataPack.hpp"
+#include "Data.hpp"
 #include "Port.hpp"
 #include "CompoentInterface.hpp"
 
@@ -32,28 +32,28 @@ namespace ProjectA
 	class Component<MEM> : public ComponentInterface
 	{
 	public:
-		Component(uint64_t size, vector<WidthSpec> widthSpec)
+		Component(uint64_t size, WidthSpec widthSpec)
 		{
-			_memFile.resize(size);
+			Data temp(widthSpec);
 			for (uint64_t i = 0; i < size; i++)
 			{
-				_memFile[i] = DataPack{ widthSpec[i] };
+				_memFile.push_back(temp);
 			}
 		}
 
-		DataPack readFile(uint64_t addr) const
+		const Data& readFile(uint64_t addr) const
 		{
 			return _memFile[addr];
 		}
 
-		void writeFile(uint64_t addr, DataPack& data)
+		void writeFile(uint64_t addr, const Data& data)
 		{
 			_memFile[addr] = data;
 		}
 		
 
 	private:
-		vector<DataPack> _memFile;
+		vector<Data> _memFile;
 	};
 	
 }

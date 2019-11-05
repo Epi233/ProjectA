@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{ACE909B0-A56F-47E7-B571-9C63E70C43FA}</ProjectGuid>
     <RootNamespace>MainLogicImplement</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -131,11 +131,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Components\CompoentInterface.hpp" />
-    <ClInclude Include="src\Components\Data.hpp" />
+    <ClInclude Include="src\Components\Database.hpp" />
+    <ClInclude Include="src\Components\DataCell.hpp" />
     <ClInclude Include="src\Components\LogicUnit.hpp" />
     <ClInclude Include="src\Components\MemUnit.hpp" />
-    <ClInclude Include="src\Components\DataPack.hpp" />
-    <ClInclude Include="src\Components\DataBase.hpp" />
+    <ClInclude Include="src\Components\Data.hpp" />
     <ClInclude Include="src\Components\Module.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />
     <ClInclude Include="src\Define\Define.hpp" />

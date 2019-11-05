@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config>
-    <DataType name="32d1v" spec="[32][1]"/>
-    <DataType name="32d1v1b" spec="[32][1][1]" />
+    <DataCellType name="32d1v" spec="[32][1]"/>
+    <DataCellType name="32d1v1b" spec="[32][1][1]" />
 
     <Module name="PE">
 

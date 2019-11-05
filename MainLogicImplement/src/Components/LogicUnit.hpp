@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DataPack.hpp"
+#include "Data.hpp"
 #include "CompoentInterface.hpp"
 #include "lua.hpp"
 #include "Port.hpp"
@@ -27,16 +27,22 @@ namespace ProjectA
 			lua_close(_luaState);
 		}
 
+		void luaDoFile()
+		{
+			luaL_dofile(_luaState, _luaScriptName.c_str());
+		}
+
+		lua_State* getLuaStatePtr() const
+		{
+			return _luaState;
+		}
+
 	protected:
 		void luaInit()
 		{
 			_luaState = luaL_newstate();
 			luaL_openlibs(_luaState);
-			if (luaL_loadfile(_luaState, _luaScriptName.c_str()))
-				throw LuaLoadError("Lua File Addr Error: " + _luaScriptName);
 		}
-
-		virtual void setLuaBridge() = 0;
 		
 	protected:
 		string _luaScriptName;
@@ -52,7 +58,7 @@ namespace ProjectA
 	class LogicUnit<MEM> : public LogicUnitBase, public NonCopyable, public NonMovable
 	{
 	public:
-		LogicUnit(const string& luaAddr, size_t memSize, vector<WidthSpec> widthSpec)
+		LogicUnit(const string& luaAddr, size_t memSize, WidthSpec widthSpec)
 			: LogicUnitBase(luaAddr)
 		{
 			_mem = new Component<MEM>{ memSize, widthSpec };
@@ -63,17 +69,7 @@ namespace ProjectA
 			delete _mem;
 		}
 
-		void setLuaBridge() override
-		{
-			
-
-
-			
-		}
-
 	private:
-		vector<Port<IN>> _inPorts;
-		vector<Port<OUT>> _outPorts;
 		Component<MEM>* _mem;
 		
 	};

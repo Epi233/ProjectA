@@ -6,58 +6,66 @@
 #include "Port.hpp"
 #include "MemUnit.hpp"
 #include "CompoentInterface.hpp"
+#include "LuaBridge.h"
+#include "Vector.h"
 #include <unordered_map>
+#include "Data.hpp"
 
 using std::unordered_map;
 
 namespace ProjectA
 {
-	class Database : public Singleton<Database>
+	class Database
 	{
 	public:
-		struct DatabaseModule
-		{
-			unordered_map<string, Component<FIFO>*> fifoDatabase;
-			unordered_map<string, Component<STACK>*> stackDatabase;
-			unordered_map<string, Component<MEM>*> memDatabase;
-		};
-
-	public:
+		Database() = default;
+		
 		~Database()
 		{
-			for (auto& everyDatabaseModuleItr : _database)
-			{
-				for (auto& itr : everyDatabaseModuleItr.second.fifoDatabase)
-					delete itr.second;
-				for (auto& itr : everyDatabaseModuleItr.second.stackDatabase)
-					delete itr.second;
-				for (auto& itr : everyDatabaseModuleItr.second.memDatabase)
-					delete itr.second;
-			}
+			for (auto& itr : _fifoDatabase)
+				delete itr.second;
+			for (auto& itr : _stackDatabase)
+				delete itr.second;
+			for (auto& itr : _memDatabase)
+				delete itr.second;
 		}
 		
 	public:
 		// Mem 相关接口
-		void insertComponentMem(const string& moduleName, const string& memName, uint64_t size, vector<WidthSpec> widthSpec)
+		void insertComponentMem(const string& moduleName, const string& memName, uint64_t size, WidthSpec widthSpec)
 		{
-			_database[moduleName].memDatabase[memName] = new Component<MEM>(size, widthSpec);
+			_memDatabase[memName] = new Component<MEM>(size, widthSpec);
 		}
 
-		DataPack readMem(const string& moduleName, const string& memName, uint64_t addr)
+	public: // Lua接口
+		void luaLoadDatabaseFunctions(lua_State* luaState)
 		{
-			return _database[moduleName].memDatabase[memName]->readFile(addr);
+			luabridge::getGlobalNamespace(luaState)
+				.beginClass<Database>("Database")
+				.addFunction("readMem", &readMem)
+				.addFunction("writeMem", &writeMem)
+				.endClass();
+		}
+		
+		// Mem
+		vector<uint64_t> readMem(const string& memName, uint64_t addr)
+		{
+			const DataPack& dataPack =  _memDatabase[memName]->readFile(addr);
+			vector<uint64_t> result;
+			for (auto& i : dataPack)
+				result.push_back(i.getData<uint64_t>());
+			return result;
 		}
 
-		void writeMem(const string& moduleName, const string& memName, uint64_t addr, DataPack& data)
+		void writeMem(const string& memName, uint64_t addr, const DataPack& data)
 		{
-			_database[moduleName].memDatabase[memName]->writeFile(addr, data);
+			_memDatabase[memName]->writeFile(addr, data);
 		}
 
 	private:
-		Database() = default;
-
-	private:
-		unordered_map<string, DatabaseModule> _database;
+		unordered_map<string, Component<FIFO>*> _fifoDatabase;
+		unordered_map<string, Component<STACK>*> _stackDatabase;
+		unordered_map<string, Component<MEM>*> _memDatabase;
 	};
 	
 }

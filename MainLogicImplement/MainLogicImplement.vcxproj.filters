@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="src\Components\DataPack.hpp">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\Util\Util.hpp">
       <Filter>Util</Filter>
     </ClInclude>
@@ -16,9 +13,6 @@
     <ClInclude Include="src\Components\MemUnit.hpp">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\DataBase.hpp">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\Components\LogicUnit.hpp">
       <Filter>Components</Filter>
     </ClInclude>
@@ -28,10 +22,16 @@
     <ClInclude Include="src\Define\Define.hpp">
       <Filter>Define</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\Module.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\DataCell.hpp">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Components\Data.hpp">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Module.hpp">
+    <ClInclude Include="src\Components\Database.hpp">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
