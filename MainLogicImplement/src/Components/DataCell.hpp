@@ -78,6 +78,11 @@ namespace ProjectA
 			return _dataBinary;
 		}
 
+		uint64_t getSize() const
+		{
+			return _size;
+		}
+
 	private:
 		void generateFromNumber(int64_t data)
 		{

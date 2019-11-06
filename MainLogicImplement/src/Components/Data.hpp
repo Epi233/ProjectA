@@ -4,8 +4,10 @@
  * WidthSpec是Data中每一个Cell的size组成的vector
  *
  * Data的构造必须指明WidthSpec
- * Data的赋值会自动检查Data的size匹配与Data中每一个Cell的size匹配
  * 
+ * Data的赋值会自动检查Data的size匹配与Data中每一个Cell的size匹配
+ *
+ *  -- 行 2019.11.6
  */
 #pragma once
 
@@ -25,6 +27,14 @@ namespace ProjectA
 		{
 			for (auto size : spec)
 				_dataCells.emplace_back(size);
+		}
+
+		Data(const WidthSpec& spec, const vector<uint64_t>& value)
+			: _dataCells(vector<DataCell>{})
+		{
+			DEBUG_ASSERT(spec.size() == value.size());
+			for (size_t i = 0; i < spec.size(); ++i)
+				_dataCells.emplace_back(spec[i], value[i]);
 		}
 
 		Data(const Data& rhs) = default;
@@ -77,6 +87,13 @@ namespace ProjectA
 		const vector<DataCell>& getDataCells() const
 		{
 			return _dataCells;
+		}
+
+		void setValue(const vector<uint64_t>& value)
+		{
+			DEBUG_ASSERT(_dataCells.size() == value.size());
+			for (size_t i = 0; i < value.size(); ++i)
+				_dataCells[i] = DataCell(_dataCells[i].getSize(), value[i]);
 		}
 
 	private:

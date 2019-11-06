@@ -17,10 +17,7 @@
 #include "CompoentInterface.hpp"
 #include "LuaBridge.h"
 #include "Vector.h"
-#include <unordered_map>
 #include "Data.hpp"
-
-using std::unordered_map;
 
 namespace ProjectA
 {
@@ -31,19 +28,15 @@ namespace ProjectA
 		
 		~Database()
 		{
-			for (auto& itr : _fifoDatabase)
-				delete itr.second;
-			for (auto& itr : _stackDatabase)
-				delete itr.second;
-			for (auto& itr : _memDatabase)
-				delete itr.second;
+			// 所有指针由LogicUnit申请，由LogicUnit释放
+			// 这里不需要做任何事情
 		}
 		
 	public:
 		// Mem 相关接口
-		void insertComponentMem(const string& moduleName, const string& memName, uint64_t size, WidthSpec widthSpec)
+		void insertComponentMem(const string& memName, Component<MEM>* ptr)
 		{
-			_memDatabase[memName] = new Component<MEM>(size, widthSpec);
+			_memDatabase[memName] = ptr;
 		}
 
 	public: // Lua接口
@@ -53,10 +46,11 @@ namespace ProjectA
 				.beginClass<Database>("Database")
 				.addFunction("readMem", &readMem)
 				.addFunction("writeMem", &writeMem)
+				.addFunction("setOutput", &setOutput)
 				.endClass();
 		}
 		
-		// Mem
+		/** MEM 相关接口 */
 		vector<uint64_t> readMem(const string& memName, uint64_t addr)
 		{
 			const Data& data =  _memDatabase[memName]->readFile(addr);
@@ -66,10 +60,21 @@ namespace ProjectA
 			return result;
 		}
 
-		void writeMem(const string& memName, uint64_t addr, const Data& data)
+		void writeMem(const string& memName, uint64_t addr, const vector<uint64_t>& data)
 		{
-			_memDatabase[memName]->writeFile(addr, data);
+			Data temp(_memDatabase[memName]->getWidthSpec());
+			temp.setValue(data);
+			_memDatabase[memName]->writeFile(addr, temp);
 		}
+
+		void setOutput(const string& memName, const vector<uint64_t>& data)
+		{
+			Data temp(_memDatabase[memName]->getWidthSpec());
+			temp.setValue(data);
+			_memDatabase[memName]->setSendArea(temp);
+		}
+
+		
 
 	private:
 		unordered_map<string, Component<FIFO>*> _fifoDatabase;

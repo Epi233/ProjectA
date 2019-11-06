@@ -49,6 +49,8 @@ namespace ProjectA
 			return _luaState;
 		}
 
+		virtual void run() = 0;
+
 	protected:
 		void luaInit()
 		{
@@ -83,8 +85,9 @@ namespace ProjectA
 	public:
 		LogicUnit(const string& luaAddr, size_t memSize, WidthSpec widthSpec)
 			: LogicUnitBase(luaAddr)
-			, inPort(false, widthSpec)
-			, outPort(true, widthSpec)
+			, _inPort(false, widthSpec)
+			, _outPort(true, widthSpec)
+			, _mem(nullptr)
 		{
 			_mem = new Component<MEM>{ memSize, widthSpec };
 		}
@@ -95,21 +98,28 @@ namespace ProjectA
 		}
 
 	public:
-		void run()
+		void run() override
 		{
 			// inPort不挂target，需要直接取发送区
-			inPort.run();
-			Data inputData = inPort.getSendArea();
-			luabridge::push(_luaState, inputData);
-			lua_setglobal(_luaState, "database");
+			_inPort.run();
+			Data inputData = _inPort.getSendArea();
+			luabridge::push(_luaState, inputData.getDataCells());
+			lua_setglobal(_luaState, "inputData");
 			// 执行脚本
 			luaDoFile();
-			// TODO 这里的逻辑不是很自然 怎么把MEM部分的输入输出放在同一侧？？
+			// 拿MEM的输出
+			_outPort.setPrepareArea(_mem->getSendArea());
+			_outPort.run();
+		}
+
+		Component<MEM>* getPtr() const
+		{
+			return _mem;
 		}
 
 	private:
-		Port inPort;
-		Port outPort;
+		Port _inPort;
+		Port _outPort;
 		Component<MEM>* _mem;
 		
 	};
