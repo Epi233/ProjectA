@@ -139,7 +139,10 @@
     <ClInclude Include="src\Components\Module.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />
     <ClInclude Include="src\Define\Define.hpp" />
+    <ClInclude Include="src\Util\Any.hpp" />
     <ClInclude Include="src\Util\Exception.hpp" />
+    <ClInclude Include="src\Util\FunctionTraits.hpp" />
+    <ClInclude Include="src\Util\MessageBus.hpp" />
     <ClInclude Include="src\Util\Util.hpp" />
   </ItemGroup>
   <ItemGroup>

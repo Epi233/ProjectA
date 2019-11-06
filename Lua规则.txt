@@ -3,13 +3,14 @@ LogicUnit<MEM> 规则
 Database类 readMem函数 writeMem函数 setOutput函数
 全局变量 database
 全局变量 inputData
+全局变量 self
 
 Lua内容：
 输入值通过全局变量inputData拿到
 注意这个值目前是没有存到MEM中的，Lua需要去存它
 通过database.writeMem(memName, addr, inputData)来存
 通过database.readMem(memName, addr)来访问当前Module中的任意一个MEM
-最终的输出值通过database.setOutput(memName, data)来实现
+最终的输出值通过self.setOutput(data)来实现
 
 注意：
 实际上每个Lua脚本都拥有访问当前module所有存储器件的权限

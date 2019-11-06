@@ -22,21 +22,16 @@ namespace ProjectA
 		Database _database;
 
 	private:
-		void loadLua(LogicUnitBase* logicPtr)
-		{
-			lua_State* luaState = logicPtr->getLuaStatePtr();
-			_database.luaLoadDatabaseFunctions(luaState);
-
-			luabridge::push(luaState, &_database);
-			lua_setglobal(luaState, "database");
-		}
-		
 		void createLogicUnitMem(const string& memName, const string& luaAddr, size_t memSize, WidthSpec widthSpec)
 		{
+			// 创建MEM逻辑组件
 			LogicUnit<MEM>* ptr = new LogicUnit<MEM>(luaAddr, memSize, widthSpec);
+			// Database更新新组件
 			_database.insertComponentMem(memName, ptr->getPtr());
+			// 逻辑组件加载Database函数
+			_database.luaLoadDatabaseFunctions(ptr->getLuaStatePtr());
+			// 向基类转换
 			LogicUnitBase* base_ptr = dynamic_cast<LogicUnitBase*>(ptr);
-			loadLua(base_ptr);
 			_memLogicUnits.push_back(base_ptr);
 		}
 	};

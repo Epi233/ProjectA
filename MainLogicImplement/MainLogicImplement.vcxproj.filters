@@ -34,6 +34,15 @@
     <ClInclude Include="src\Components\Database.hpp">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util\Any.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\FunctionTraits.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Util\MessageBus.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

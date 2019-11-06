@@ -72,12 +72,29 @@ namespace ProjectA
 	class LogicUnit;
 
 	/*
+	 * EMPTY类型的LogicUnit
+	 *
+	 * 不外挂任何存储组件，单纯的逻辑
+	 * 输入Port不打拍，直接执行脚本逻辑
+	 * 输出Port不打拍
+	 */
+	template<>
+	class LogicUnit<EMPTY> : public LogicUnitBase, public NonCopyable, public NonMovable
+	{
+	public:
+
+
+	private:
+
+		
+	};
+
+	/*
 	 * MEM类型的LogicUnit
 	 *
 	 * 输入Port不打拍，直接执行脚本逻辑
 	 * 输出Port打拍
 	 *
-	 * 
 	 */
 	template<>
 	class LogicUnit<MEM> : public LogicUnitBase, public NonCopyable, public NonMovable
@@ -90,6 +107,7 @@ namespace ProjectA
 			, _mem(nullptr)
 		{
 			_mem = new Component<MEM>{ memSize, widthSpec };
+			luaLoadFunction();
 		}
 
 		~LogicUnit()
@@ -115,6 +133,25 @@ namespace ProjectA
 		Component<MEM>* getPtr() const
 		{
 			return _mem;
+		}
+
+	private: /** for Lua */
+		void luaLoadFunction()
+		{
+			luabridge::getGlobalNamespace(_luaState)
+				.beginClass<LogicUnit<MEM>>("Self")
+				.addFunction("setOutput", &setOutput)
+				.endClass();
+
+			luabridge::push(_luaState, this);
+			lua_setglobal(_luaState, "self");
+		}
+		
+		void setOutput(const vector<uint64_t>& data)
+		{
+			Data temp(_mem->getWidthSpec());
+			temp.setValue(data);
+			_mem->setSendArea(temp);
 		}
 
 	private:

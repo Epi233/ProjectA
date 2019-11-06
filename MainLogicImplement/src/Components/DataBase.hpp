@@ -46,8 +46,10 @@ namespace ProjectA
 				.beginClass<Database>("Database")
 				.addFunction("readMem", &readMem)
 				.addFunction("writeMem", &writeMem)
-				.addFunction("setOutput", &setOutput)
 				.endClass();
+
+			luabridge::push(luaState, this);
+			lua_setglobal(luaState, "database");
 		}
 		
 		/** MEM 相关接口 */
@@ -67,12 +69,7 @@ namespace ProjectA
 			_memDatabase[memName]->writeFile(addr, temp);
 		}
 
-		void setOutput(const string& memName, const vector<uint64_t>& data)
-		{
-			Data temp(_memDatabase[memName]->getWidthSpec());
-			temp.setValue(data);
-			_memDatabase[memName]->setSendArea(temp);
-		}
+		
 
 		
 
