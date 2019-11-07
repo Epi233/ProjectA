@@ -89,6 +89,14 @@ namespace ProjectA
 			return _dataCells;
 		}
 
+		vector<uint64_t> getDataCellsUnit64() const
+		{
+			vector<uint64_t> result(_dataCells.size());
+			for (size_t i = 0; i < result.size(); i++)
+				result[i] = _dataCells[i].getData<uint64_t>();
+			return result;
+		}
+
 		void setValue(const vector<uint64_t>& value)
 		{
 			DEBUG_ASSERT(_dataCells.size() == value.size());

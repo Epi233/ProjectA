@@ -1,12 +1,11 @@
 LogicUnit<MEM> 规则
 注册的内容：
 Database类 readMem函数 writeMem函数 setOutput函数
-全局变量 database
-全局变量 inputData
-全局变量 self
+Self类 getInput函数 setOutput函数
+全局变量 database self
 
 Lua内容：
-输入值通过全局变量inputData拿到
+输入值通过self.getInput拿到
 注意这个值目前是没有存到MEM中的，Lua需要去存它
 通过database.writeMem(memName, addr, inputData)来存
 通过database.readMem(memName, addr)来访问当前Module中的任意一个MEM
@@ -15,3 +14,11 @@ Lua内容：
 注意：
 实际上每个Lua脚本都拥有访问当前module所有存储器件的权限
 需要Lua编写者自己注意访存的位置
+
+
+LogicUnit<EMPTY> 规则
+
+这个组件不挂载任何实质的组件
+单纯用来做一个逻辑
+输入输出都不打拍子
+最终的输出值通过self.setOutput(data)来实现

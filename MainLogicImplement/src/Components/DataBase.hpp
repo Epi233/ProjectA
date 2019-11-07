@@ -21,6 +21,27 @@
 
 namespace ProjectA
 {
+	class DataTypeRepo
+	{
+	public:
+		DataTypeRepo() = default;
+
+		void insert(const string& name, WidthSpec widthSpec)
+		{
+			_repo[name] = widthSpec;
+		}
+
+		const WidthSpec& getWidthSpec(const string& name) const
+		{
+			auto itr = _repo.find(name);
+			DEBUG_ASSERT(itr != _repo.end());
+			return itr->second;
+		}
+
+	private:
+		unordered_map<string, WidthSpec> _repo;
+	};
+	
 	class Database
 	{
 	public:
@@ -69,9 +90,6 @@ namespace ProjectA
 			_memDatabase[memName]->writeFile(addr, temp);
 		}
 
-		
-
-		
 
 	private:
 		unordered_map<string, Component<FIFO>*> _fifoDatabase;

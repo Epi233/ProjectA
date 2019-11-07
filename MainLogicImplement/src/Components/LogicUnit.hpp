@@ -39,6 +39,7 @@ namespace ProjectA
 			lua_close(_luaState);
 		}
 
+	public:
 		void luaDoFile()
 		{
 			luaL_dofile(_luaState, _luaScriptName.c_str());
@@ -51,6 +52,33 @@ namespace ProjectA
 
 		virtual void run() = 0;
 
+		void addInPort(bool isBuffered, const WidthSpec& widthSpec)
+		{
+			_inPorts.emplace_back(isBuffered, widthSpec);
+		}
+
+		void addOutPort(bool isBuffered, const WidthSpec& widthSpec)
+		{
+			_outPorts.emplace_back(isBuffered, widthSpec);
+		}
+
+		void runInPorts()
+		{
+			for (auto& port : _inPorts)
+				port.run();
+		}
+
+		void runOutPorts()
+		{
+			for (auto& port : _outPorts)
+				port.run();
+		}
+
+		void luaLoadInputs()
+		{
+			// TODO
+		}
+
 	protected:
 		void luaInit()
 		{
@@ -61,6 +89,9 @@ namespace ProjectA
 	protected:
 		string _luaScriptName;
 		lua_State* _luaState;
+
+		vector<Port> _inPorts;
+		vector<Port> _outPorts;
 	};
 
 
@@ -82,11 +113,47 @@ namespace ProjectA
 	class LogicUnit<EMPTY> : public LogicUnitBase, public NonCopyable, public NonMovable
 	{
 	public:
+		explicit LogicUnit(const string& luaAddr)
+			: LogicUnitBase(luaAddr)
+		{
+			luaLoadFunction();
+		}
+	public:
+		void run() override
+		{
+			runInPorts();
+			luaLoadInputs();
+			// 执行脚本
+			luaDoFile();
+			// Lua中应该已经setOutput函数把输出放在了outPort的准备区
+			runOutPorts();
+		}
 
+	private: /** for Lua */
+		void luaLoadFunction()
+		{
+			luabridge::getGlobalNamespace(_luaState)
+				.beginClass<LogicUnit<EMPTY>>("Self")
+				.addFunction("getInput", &getInput)
+				.addFunction("setOutput", &setOutput)
+				.endClass();
 
-	private:
+			luabridge::push(_luaState, this);
+			lua_setglobal(_luaState, "self");
+		}
 
-		
+		vector<uint64_t> getInput() const
+		{
+			Data inputData = _inPort.getSendArea();
+			return inputData.getDataCellsUnit64();
+		}
+
+		void setOutput(const vector<uint64_t>& data)
+		{
+			Data temp(_outPort.getSendArea()); // 拿Spec
+			temp.setValue(data);
+			_outPort.setPrepareArea(temp);
+		}
 	};
 
 	/*

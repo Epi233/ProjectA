@@ -1,49 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config>
-    <DataCellType name="32d1v" spec="[32][1]"/>
-    <DataCellType name="32d1v1b" spec="[32][1][1]" />
+    <DataType name="32d1v" spec="[32][1]"/>
+    <DataType name="32d1v1b" spec="[32][1][1]" />
 
     <Module name="PE">
 
-        <InPort specName="32d1v"/>
-        <InPort specName="32d1v"/>
-        <InPort specName="32d1v"/>
-        <OutPort specName="32d1v1b"/>
+        <InPort specName="32d1v" isBuffered="false"/>
+        <InPort specName="32d1v" isBuffered="false"/>
+        <InPort specName="32d1v" isBuffered="false"/>
+        <OutPort specName="32d1v1b" isBuffered="false"/>
 
-        <LogicUnit name="inBuffer1">
-            <InPort specName="32d1v"/>
-            <OutPort specName="32d1v1b"/>
-            <Lua type="MEM">
-                <Script name="inBuffer1.lua" />
-                <Parameter size="5" specName="32d1v" />
-            </Lua>
+        <LogicUnit name="inBuffer1" type="MEM" scriptName="inBuffer1.lua">
+            <Parameter size="5" specName="32d1v" />
         </LogicUnit>
 
-        <LogicUnit name="inBuffer2">
-            <InPort specName="32d1v"/>
-            <OutPort specName="32d1v1b"/>
-            <Lua type="MEM">
-                <Script name="inBuffer2.lua" />
-                <Parameter size="5" specName="32d1v" />
-            </Lua>
-        </LogicUnit>
-
-        <LogicUnit name="inBuffer3">
-            <InPort specName="32d1v"/>
-            <OutPort specName="32d1v1b"/>
-            <Lua type="MEM">
-                <Script name="inBuffer3.lua" />
-                <Parameter size="5" specName="32d1v" />
-            </Lua>
-        </LogicUnit>
-
-        <LogicUnit name="outBuffer">
-            <InPort specName="32d1v1b"/>
-            <OutPort specName="32d1v1b"/>
-            <Lua type="MEM">
-                <Script name="outBuffer.lua" />
-                <Parameter size="5" specName="32d1v" />
-            </Lua>
-        </LogicUnit>
+        <Connection>
+            <InportOut index="0" targetName="inBuffer1"/>
+            <InportOut index="1" targetName="inBuffer1"/>
+            <OutputIn index="0" sourceName="inBuffer1"/>
+            <FreeConnection sourceName="" targetName=""/>
+        </Connection>
+       
     </Module>
 </Config>

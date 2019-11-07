@@ -27,7 +27,7 @@ namespace ProjectA
 	class Port
 	{
 	public:
-		Port(bool isBuffered, WidthSpec widthSpec)
+		Port(bool isBuffered, const WidthSpec& widthSpec)
 			: _isBuffered(isBuffered)
 			, _prepareArea(widthSpec)
 			, _bufferArea(widthSpec)
