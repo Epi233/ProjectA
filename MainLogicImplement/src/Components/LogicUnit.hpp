@@ -40,17 +40,13 @@ namespace ProjectA
 		}
 
 	public:
-		void luaDoFile()
-		{
-			luaL_dofile(_luaState, _luaScriptName.c_str());
-		}
+		
+		virtual void run() = 0;
 
 		lua_State* getLuaStatePtr() const
 		{
 			return _luaState;
 		}
-
-		virtual void run() = 0;
 
 		void addInPort(bool isBuffered, const WidthSpec& widthSpec)
 		{
@@ -62,6 +58,8 @@ namespace ProjectA
 			_outPorts.emplace_back(isBuffered, widthSpec);
 		}
 
+	protected:
+		
 		void runInPorts()
 		{
 			for (auto& port : _inPorts)
@@ -73,21 +71,46 @@ namespace ProjectA
 			for (auto& port : _outPorts)
 				port.run();
 		}
-
-		void luaLoadInputs()
-		{
-			// TODO
-		}
-
-	protected:
+		
 		void luaInit()
 		{
 			_luaState = luaL_newstate();
 			luaL_openlibs(_luaState);
+			luaLoadSelf();
+		}
+
+	protected: /** for Lua */
+		void luaLoadSelf()
+		{
+			luabridge::getGlobalNamespace(_luaState)
+				.beginClass<LogicUnitBase>("Self")
+				.addFunction("getInput", getInput)
+				.addFunction("setOutput", &setOutput)
+				.endClass();
+
+			luabridge::push(_luaState, this);
+			lua_setglobal(_luaState, "self");
+		}
+
+		vector<uint64_t> getInput(uint64_t index)
+		{
+			if (index >= _inPorts.size())
+				throw exception("Input Index Out of Boundary");
+			return _inPorts[index].getSendArea().getDataCellsUnit64();
+		}
+
+		void setOutput(uint64_t index, const vector<uint64_t>& data)
+		{
+			if (index >= _outPorts.size())
+				throw exception("Input Index Out of Boundary");
+			Data temp(_outPorts[index].getSendArea()); // 拿Spec
+			temp.setValue(data);
+			_outPorts[index].setPrepareArea(temp);
 		}
 		
 	protected:
 		string _luaScriptName;
+		
 		lua_State* _luaState;
 
 		vector<Port> _inPorts;
@@ -116,43 +139,15 @@ namespace ProjectA
 		explicit LogicUnit(const string& luaAddr)
 			: LogicUnitBase(luaAddr)
 		{
-			luaLoadFunction();
 		}
 	public:
 		void run() override
 		{
 			runInPorts();
-			luaLoadInputs();
 			// 执行脚本
-			luaDoFile();
+			luaL_dofile(_luaState, _luaScriptName.c_str());
 			// Lua中应该已经setOutput函数把输出放在了outPort的准备区
 			runOutPorts();
-		}
-
-	private: /** for Lua */
-		void luaLoadFunction()
-		{
-			luabridge::getGlobalNamespace(_luaState)
-				.beginClass<LogicUnit<EMPTY>>("Self")
-				.addFunction("getInput", &getInput)
-				.addFunction("setOutput", &setOutput)
-				.endClass();
-
-			luabridge::push(_luaState, this);
-			lua_setglobal(_luaState, "self");
-		}
-
-		vector<uint64_t> getInput() const
-		{
-			Data inputData = _inPort.getSendArea();
-			return inputData.getDataCellsUnit64();
-		}
-
-		void setOutput(const vector<uint64_t>& data)
-		{
-			Data temp(_outPort.getSendArea()); // 拿Spec
-			temp.setValue(data);
-			_outPort.setPrepareArea(temp);
 		}
 	};
 
@@ -169,12 +164,9 @@ namespace ProjectA
 	public:
 		LogicUnit(const string& luaAddr, size_t memSize, WidthSpec widthSpec)
 			: LogicUnitBase(luaAddr)
-			, _inPort(false, widthSpec)
-			, _outPort(true, widthSpec)
 			, _mem(nullptr)
 		{
 			_mem = new Component<MEM>{ memSize, widthSpec };
-			luaLoadFunction();
 		}
 
 		~LogicUnit()
@@ -185,16 +177,11 @@ namespace ProjectA
 	public:
 		void run() override
 		{
-			// inPort不挂target，需要直接取发送区
-			_inPort.run();
-			Data inputData = _inPort.getSendArea();
-			luabridge::push(_luaState, inputData.getDataCells());
-			lua_setglobal(_luaState, "inputData");
+			runInPorts();
 			// 执行脚本
-			luaDoFile();
-			// 拿MEM的输出
-			_outPort.setPrepareArea(_mem->getSendArea());
-			_outPort.run();
+			luaL_dofile(_luaState, _luaScriptName.c_str());
+			// Lua中应该已经setOutput函数把输出放在了outPort的准备区
+			runOutPorts();
 		}
 
 		Component<MEM>* getPtr() const
@@ -202,28 +189,7 @@ namespace ProjectA
 			return _mem;
 		}
 
-	private: /** for Lua */
-		void luaLoadFunction()
-		{
-			luabridge::getGlobalNamespace(_luaState)
-				.beginClass<LogicUnit<MEM>>("Self")
-				.addFunction("setOutput", &setOutput)
-				.endClass();
-
-			luabridge::push(_luaState, this);
-			lua_setglobal(_luaState, "self");
-		}
-		
-		void setOutput(const vector<uint64_t>& data)
-		{
-			Data temp(_mem->getWidthSpec());
-			temp.setValue(data);
-			_mem->setSendArea(temp);
-		}
-
 	private:
-		Port _inPort;
-		Port _outPort;
 		Component<MEM>* _mem;
 		
 	};
