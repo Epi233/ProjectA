@@ -22,3 +22,8 @@ LogicUnit<EMPTY> 规则
 单纯用来做一个逻辑
 输入输出都不打拍子
 最终的输出值通过self.setOutput(data)来实现
+
+任务列表
+module内的执行，仿真先后顺序问题
+不同类型Data转换类型的问题
+打固定周期拍子的问题
