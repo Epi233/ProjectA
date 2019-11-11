@@ -51,7 +51,7 @@ namespace ProjectA
 			// 逻辑组件加载Database函数
 			_database.luaLoadDatabaseFunctions(ptr->getLuaStatePtr());
 			// 向基类转换
-			LogicUnitBase* base_ptr = dynamic_cast<LogicUnitBase*>(ptr);
+			Logic* base_ptr = dynamic_cast<Logic*>(ptr);
 			_logicUnits.push_back(base_ptr);
 		}
 		
@@ -64,7 +64,7 @@ namespace ProjectA
 			// 逻辑组件加载Database函数
 			_database.luaLoadDatabaseFunctions(ptr->getLuaStatePtr());
 			// 向基类转换
-			LogicUnitBase* base_ptr = dynamic_cast<LogicUnitBase*>(ptr);
+			Logic* base_ptr = dynamic_cast<Logic*>(ptr);
 			_logicUnits.push_back(base_ptr);
 		}
 #pragma endregion 
@@ -129,7 +129,7 @@ namespace ProjectA
 	private:
 		string _moduleName;
 
-		vector<LogicUnitBase*> _logicUnits;
+		vector<Logic*> _logicUnits;
 		Database _database;
 
 		vector<Port> _inPorts;

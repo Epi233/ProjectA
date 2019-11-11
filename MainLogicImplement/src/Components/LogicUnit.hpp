@@ -20,21 +20,28 @@
 namespace ProjectA
 {
 	/*
-	 * LogicUnitBase
+	 * 实现模板特化用的
+	 * 不做实现
+	 */
+	template<ComponentType Type>
+	class LogicUnit;
+	
+	/*
+	 * Logic
 	 * 所有LogicUnit的基类
 	 * 主要处理Lua接口的初始化
 	 */
-	class LogicUnitBase
+	class Logic
 	{
 	public:
-		explicit LogicUnitBase(const string& luaAddr)
+		explicit Logic(const string& luaAddr)
 			: _luaScriptName(luaAddr)
 			, _luaState(nullptr)
 		{
 			luaInit();
 		}
 
-		virtual ~LogicUnitBase()
+		virtual ~Logic()
 		{
 			lua_close(_luaState);
 		}
@@ -43,9 +50,61 @@ namespace ProjectA
 		
 		virtual void run() = 0;
 
+		void luaInit()
+		{
+			_luaState = luaL_newstate();
+			luaL_openlibs(_luaState);
+		}
+
 		lua_State* getLuaStatePtr() const
 		{
 			return _luaState;
+		}
+		
+	protected:
+		string _luaScriptName;
+		lua_State* _luaState;
+	};
+
+	/*
+	 * EMPTY类型的LogicUnit
+	 *
+	 * 不外挂任何存储组件，单纯的逻辑
+	 * 输入Port不打拍，直接执行脚本逻辑
+	 * 输出Port不打拍
+	 */
+	// TODO Data类型变换功能
+	template<>
+	class LogicUnit<EMPTY> : public Logic, public NonCopyable, public NonMovable
+	{
+	public:
+		explicit LogicUnit(const string& luaAddr)
+			: Logic(luaAddr)
+		{
+			luaLoadSelf();
+		}
+	public:
+		void run() override
+		{
+			runInPorts();
+			// 执行脚本
+			luaL_dofile(_luaState, _luaScriptName.c_str());
+			// Lua中应该已经setOutput函数把输出放在了outPort的准备区
+			runOutPorts();
+		}
+
+	protected:
+
+		void runInPorts()
+		{
+			for (auto& port : _inPorts)
+				port.run();
+		}
+
+		void runOutPorts()
+		{
+			for (auto& port : _outPorts)
+				port.run();
 		}
 
 		void addInPort(bool isBuffered, const WidthSpec& widthSpec)
@@ -58,32 +117,11 @@ namespace ProjectA
 			_outPorts.emplace_back(isBuffered, widthSpec);
 		}
 
-	protected:
-		
-		void runInPorts()
-		{
-			for (auto& port : _inPorts)
-				port.run();
-		}
-
-		void runOutPorts()
-		{
-			for (auto& port : _outPorts)
-				port.run();
-		}
-		
-		void luaInit()
-		{
-			_luaState = luaL_newstate();
-			luaL_openlibs(_luaState);
-			luaLoadSelf();
-		}
-
 	protected: /** for Lua */
 		void luaLoadSelf()
 		{
 			luabridge::getGlobalNamespace(_luaState)
-				.beginClass<LogicUnitBase>("Self")
+				.beginClass<LogicUnit<EMPTY>>("Self")
 				.addFunction("getInput", getInput)
 				.addFunction("setOutput", &setOutput)
 				.endClass();
@@ -107,10 +145,104 @@ namespace ProjectA
 			temp.setValue(data);
 			_outPorts[index].setPrepareArea(temp);
 		}
-		
+
+	private:
+		vector<Port> _inPorts;
+		vector<Port> _outPorts;
+	};
+	
+	/*
+	 * 其他类型的基类
+	 * 单输入输出
+	 */
+	
+	class LogicBase : public Logic
+	{
+	public:
+		explicit Logic(const string& luaAddr)
+			: _luaScriptName(luaAddr)
+			, _luaState(nullptr)
+		{
+			luaInit();
+		}
+
+		virtual ~Logic()
+		{
+			lua_close(_luaState);
+		}
+
+	public:
+
+		virtual void run() = 0;
+
+		lua_State* getLuaStatePtr() const
+		{
+			return _luaState;
+		}
+
+		void addInPort(bool isBuffered, const WidthSpec& widthSpec)
+		{
+			_inPorts.emplace_back(isBuffered, widthSpec);
+		}
+
+		void addOutPort(bool isBuffered, const WidthSpec& widthSpec)
+		{
+			_outPorts.emplace_back(isBuffered, widthSpec);
+		}
+
+	protected:
+
+		void runInPorts()
+		{
+			for (auto& port : _inPorts)
+				port.run();
+		}
+
+		void runOutPorts()
+		{
+			for (auto& port : _outPorts)
+				port.run();
+		}
+
+		void luaInit()
+		{
+			_luaState = luaL_newstate();
+			luaL_openlibs(_luaState);
+			luaLoadSelf();
+		}
+
+	protected: /** for Lua */
+		void luaLoadSelf()
+		{
+			luabridge::getGlobalNamespace(_luaState)
+				.beginClass<Logic>("Self")
+				.addFunction("getInput", getInput)
+				.addFunction("setOutput", &setOutput)
+				.endClass();
+
+			luabridge::push(_luaState, this);
+			lua_setglobal(_luaState, "self");
+		}
+
+		vector<uint64_t> getInput(uint64_t index)
+		{
+			if (index >= _inPorts.size())
+				throw exception("Input Index Out of Boundary");
+			return _inPorts[index].getSendArea().getDataCellsUnit64();
+		}
+
+		void setOutput(uint64_t index, const vector<uint64_t>& data)
+		{
+			if (index >= _outPorts.size())
+				throw exception("Input Index Out of Boundary");
+			Data temp(_outPorts[index].getSendArea()); // 拿Spec
+			temp.setValue(data);
+			_outPorts[index].setPrepareArea(temp);
+		}
+
 	protected:
 		string _luaScriptName;
-		
+
 		lua_State* _luaState;
 
 		vector<Port> _inPorts;
@@ -118,38 +250,9 @@ namespace ProjectA
 	};
 
 
-	/*
-	 * 实现模板特化用的
-	 * 不做实现
-	 */
-	template<ComponentType Type>
-	class LogicUnit;
+	
 
-	/*
-	 * EMPTY类型的LogicUnit
-	 *
-	 * 不外挂任何存储组件，单纯的逻辑
-	 * 输入Port不打拍，直接执行脚本逻辑
-	 * 输出Port不打拍
-	 */
-	template<>
-	class LogicUnit<EMPTY> : public LogicUnitBase, public NonCopyable, public NonMovable
-	{
-	public:
-		explicit LogicUnit(const string& luaAddr)
-			: LogicUnitBase(luaAddr)
-		{
-		}
-	public:
-		void run() override
-		{
-			runInPorts();
-			// 执行脚本
-			luaL_dofile(_luaState, _luaScriptName.c_str());
-			// Lua中应该已经setOutput函数把输出放在了outPort的准备区
-			runOutPorts();
-		}
-	};
+	
 
 	/*
 	 * MEM类型的LogicUnit
@@ -159,11 +262,11 @@ namespace ProjectA
 	 *
 	 */
 	template<>
-	class LogicUnit<MEM> : public LogicUnitBase, public NonCopyable, public NonMovable
+	class LogicUnit<MEM> : public LogicBase, public NonCopyable, public NonMovable
 	{
 	public:
 		LogicUnit(const string& luaAddr, size_t memSize, WidthSpec widthSpec)
-			: LogicUnitBase(luaAddr)
+			: LogicBase(luaAddr)
 			, _mem(nullptr)
 		{
 			_mem = new Component<MEM>{ memSize, widthSpec };
