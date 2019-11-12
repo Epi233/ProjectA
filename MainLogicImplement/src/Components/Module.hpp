@@ -47,7 +47,7 @@ namespace ProjectA
 		void createLogicUnitEmpty(const string& luaAddr, WidthSpec widthSpec)
 		{
 			// 创建EMPTY逻辑组件
-			LogicUnit<EMPTY>* ptr = new LogicUnit<EMPTY>(luaAddr, widthSpec);
+			LogicUnit<EMPTY>* ptr = new LogicUnit<EMPTY>(luaAddr);
 			// 逻辑组件加载Database函数
 			_database.luaLoadDatabaseFunctions(ptr->getLuaStatePtr());
 			// 向基类转换
@@ -55,10 +55,10 @@ namespace ProjectA
 			_logicUnits.push_back(base_ptr);
 		}
 		
-		void createLogicUnitMem(const string& memName, const string& luaAddr, size_t memSize, WidthSpec widthSpec)
+		void createLogicUnitMem(const string& memName, const string& luaAddr, size_t memSize, WidthSpec widthSpec, bool isInBuffered, bool isOutBuffered)
 		{
 			// 创建MEM逻辑组件
-			LogicUnit<MEM>* ptr = new LogicUnit<MEM>(luaAddr, memSize, widthSpec);
+			LogicUnit<MEM>* ptr = new LogicUnit<MEM>(luaAddr, memSize, widthSpec, isInBuffered, isOutBuffered);
 			// Database更新新组件
 			_database.insertComponentMem(memName, ptr->getPtr());
 			// 逻辑组件加载Database函数
@@ -109,7 +109,7 @@ namespace ProjectA
 			string componentType = xmlLogicUnit->FindAttribute("type")->Value();
 			if (componentType == "MEM")
 				xmlLogicReadMem(xmlLogicUnit);
-			// TODO 添加其他类型
+			// TODO 添加其他类型2019
 		}
 
 		void xmlLogicReadMem(XMLElement* xmlLogicUnit)
