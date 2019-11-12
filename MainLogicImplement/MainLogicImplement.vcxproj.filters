@@ -10,15 +10,6 @@
     <ClInclude Include="src\Util\Exception.hpp">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\MemUnit.hpp">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\LogicUnit.hpp">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\CompoentInterface.hpp">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\Define\Define.hpp">
       <Filter>Define</Filter>
     </ClInclude>
@@ -43,6 +34,24 @@
     <ClInclude Include="src\Util\MessageBus.hpp">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\LogicUnit\LogicUnitInterface.hpp">
+      <Filter>Components\LogicUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\LogicUnit\LogicUnitEmpty.hpp">
+      <Filter>Components\LogicUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\LogicUnit\LogicUnitBase.hpp">
+      <Filter>Components\LogicUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\LogicUnit\LogicUnitMem.hpp">
+      <Filter>Components\LogicUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Components\ComponentInterface.hpp">
+      <Filter>Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Components\MemUnit.hpp">
+      <Filter>Components\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -65,6 +74,12 @@
     </Filter>
     <Filter Include="Config">
       <UniqueIdentifier>{c98b8a0b-f257-4025-a8c0-981ba0d7feae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\LogicUnit">
+      <UniqueIdentifier>{9555e04c-74d1-4b99-aedf-39ce26a56d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Components">
+      <UniqueIdentifier>{42230fa3-d0f7-46b0-b74f-1701928a8baa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

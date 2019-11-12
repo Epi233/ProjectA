@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Data.hpp"
-#include "Port.hpp"
-#include "CompoentInterface.hpp"
+#include "../Data.hpp"
+#include "../Port.hpp"
+#include "ComponentInterface.hpp"
 
 namespace ProjectA
 {
