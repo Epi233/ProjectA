@@ -130,14 +130,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Components\Components\ComponentInterface.hpp" />
-    <ClInclude Include="src\Components\Components\MemUnit.hpp" />
+    <ClInclude Include="src\Components\ComponentInterface.hpp" />
+    <ClInclude Include="src\Components\Components.hpp" />
     <ClInclude Include="src\Components\Database.hpp" />
     <ClInclude Include="src\Components\DataCell.hpp" />
-    <ClInclude Include="src\Components\LogicUnit\LogicUnitBase.hpp" />
-    <ClInclude Include="src\Components\LogicUnit\LogicUnitEmpty.hpp" />
-    <ClInclude Include="src\Components\LogicUnit\LogicUnitInterface.hpp" />
-    <ClInclude Include="src\Components\LogicUnit\LogicUnitMem.hpp" />
+    <ClInclude Include="src\Components\LogicUnit.hpp" />
     <ClInclude Include="src\Components\Data.hpp" />
     <ClInclude Include="src\Components\Module.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />

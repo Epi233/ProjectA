@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Define/Define.hpp"
+#include "../Define/Define.hpp"
 
 namespace ProjectA
 {

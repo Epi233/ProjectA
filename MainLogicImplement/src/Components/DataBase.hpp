@@ -13,8 +13,8 @@
 #include "../Util/Exception.hpp"
 #include "Data.hpp"
 #include "Port.hpp"
-#include "MemUnit.hpp"
-#include "CompoentInterface.hpp"
+#include "LogicUnit.hpp"
+#include "Components.hpp"
 #include "LuaBridge.h"
 #include "Vector.h"
 #include "Data.hpp"
@@ -69,7 +69,7 @@ namespace ProjectA
 				.addFunction("writeMem", &writeMem)
 				.endClass();
 
-			luabridge::push(luaState, this);
+			luabridge::push(luaState, &*this);
 			lua_setglobal(luaState, "database");
 		}
 		
