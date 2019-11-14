@@ -1,4 +1,17 @@
 /*
+ * 补充支持Cycle = 0的情况
+ * 直接过CycleBuffer不打拍子
+ *
+ * 取消了查看准备区有效和发送区有效这个设计
+ * CycleBuffer按照物理真实不管准备区是什么
+ * 都每个时钟拉数进来
+ * 发送区同理
+ *
+ * 外部打数进来以后，要在正确的时钟位置拿数
+ * 不然数就没了
+ *
+ *  -- 行 2019.11.14
+ *
  * CycleBuffer是打拍子用的数据结构
  *
  * 取数前必须检查checkSendAreaValid()
@@ -36,45 +49,53 @@ namespace ProjectA
 		explicit CycleBuffer(uint64_t cycle, const WidthSpec& spec)
 			: _cycleNum(cycle)
 			, _widthSpec(spec)
+			, _prepareArea(spec)
 			, _bufferList()
-			, _isSendAreaValid(false)
 			, _sendArea(spec)
 		{
 		}
 
-		void addData(const Data& data)
+		void setPrepareData(const Data& data)
 		{
-			_bufferList.emplace_back(data, _cycleNum);
+			_prepareArea = data;
+		}
+
+		// 拿发送区内容务必先检测是否有效
+		Data getSendArea() const
+		{
+			return _sendArea;
 		}
 
 		void run()
 		{
-			_isSendAreaValid = false;
-			if (_bufferList.begin()->count == 1)
+			// 计数为0需要单独处理
+			if (_cycleNum == 0)
 			{
-				_isSendAreaValid = true;
-				_sendArea = _bufferList.front().data;
-				_bufferList.pop_front();
+				_sendArea = _prepareArea;
 			}
-				
-			for (auto& i : _bufferList)
-				i.count--;
-		}
 
-		bool checkSendAreaValid() const
-		{
-			return _isSendAreaValid;
+			else
+			{
+				// 计数剩下1的pop出来
+				if (_bufferList.begin()->count == 1)
+				{
+					_sendArea = _bufferList.front().data;
+					_bufferList.pop_front();
+				}
+				// 全体计数
+				for (auto& i : _bufferList)
+					i.count--;
+				// 准备区进缓冲区
+				_bufferList.emplace_back(_prepareArea, _cycleNum);
+			}
 		}
-
-		
 
 	private:
 		uint64_t _cycleNum;
-		
 		WidthSpec _widthSpec;
-		list<CycleCounter> _bufferList;
 
-		bool _isSendAreaValid;
+		Data _prepareArea;
+		list<CycleCounter> _bufferList;
 		Data _sendArea;
 	};
 }

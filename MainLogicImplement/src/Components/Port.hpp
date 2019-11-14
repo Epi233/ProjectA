@@ -1,4 +1,10 @@
 /*
+ * Port的三个区设定好麻烦啊
+ * 干脆取消掉好了
+ * 用CycleBuffer搞把
+ *
+ *  -- 行 2019.11.14
+ * 
  * Port类
  * 并不是物理硬件意义上的端口
  * 而是用来组织连接不同模块的一个抽象概念
@@ -14,7 +20,7 @@
  * 缓冲区数据进去发送区
  * 准备区数据进去缓冲区
  *
- * 行 2019.11.5
+ *  -- 行 2019.11.5
  */
 #pragma once
 
@@ -27,11 +33,9 @@ namespace ProjectA
 	class Port
 	{
 	public:
-		Port(bool isBuffered, const WidthSpec& widthSpec)
-			: _isBuffered(isBuffered)
-			, _prepareArea(widthSpec)
-			, _bufferArea(widthSpec)
-			, _sendArea(widthSpec)
+		explicit Port(const WidthSpec& widthSpec)
+			: _widthSpec(widthSpec)
+			, _data(widthSpec)
 			, _isTargetSet(false)
 			, _target(nullptr)
 		{
@@ -44,39 +48,32 @@ namespace ProjectA
 			_target = target;
 		}
 
-		void setPrepareArea(const Data& data)
+		void setData(const Data& data)
 		{
-			_prepareArea = data;
+			_data = data;
 		}
 
-		void run()
+		void run() const
 		{
-			if (_isBuffered)
-			{
-				_sendArea = _bufferArea;
-				_bufferArea = _prepareArea;
-			}
-			else
-			{
-				_sendArea = _prepareArea;
-			}
 			if (_isTargetSet)
 			{
-				_target->setPrepareArea(_sendArea);
+				_target->setData(_data);
 			}
 		}
 
-		Data getSendArea() const
+		Data getData() const
 		{
-			return _sendArea;
+			return _data;
+		}
+
+		WidthSpec getWidthSpec() const
+		{
+			return _widthSpec;
 		}
 
 	private:
-		bool _isBuffered;
-
-		Data _prepareArea;
-		Data _bufferArea;
-		Data _sendArea;
+		WidthSpec _widthSpec;
+		Data _data;
 
 		bool _isTargetSet;
 		Port* _target;

@@ -3,6 +3,7 @@
 #include "Data.hpp"
 #include "Port.hpp"
 #include "Components.hpp"
+#include "CycleBuffer.hpp"
 
 #include "lua.hpp"
 #include "LuaBridge.h"
@@ -65,8 +66,8 @@ namespace ProjectA
 	* EMPTY类型的LogicUnit
 	*
 	* 不外挂任何存储组件，单纯的逻辑
-	* 输入Port不打拍，直接执行脚本逻辑
-	* 输出Port不打拍
+	* 不具备打拍子功能！
+	* 里面不设置CycleBuffer
 	*/
 	// TODO Data类型变换功能
 	template <>
@@ -130,16 +131,16 @@ namespace ProjectA
 		{
 			if (index >= _inPorts.size())
 				throw exception("Input Index Out of Boundary");
-			return _inPorts[index].getSendArea().getDataCellsUnit64();
+			return _inPorts[index].getData().getDataCellsUnit64();
 		}
 
 		void setOutput(uint64_t index, const vector<uint64_t>& data)
 		{
 			if (index >= _outPorts.size())
 				throw exception("Input Index Out of Boundary");
-			Data temp(_outPorts[index].getSendArea()); // 拿Spec
+			Data temp(_outPorts[index].getWidthSpec()); // 拿Spec
 			temp.setValue(data);
-			_outPorts[index].setPrepareArea(temp);
+			_outPorts[index].setData(temp);
 		}
 
 	private:
@@ -147,26 +148,31 @@ namespace ProjectA
 		vector<Port> _outPorts;
 	};
 
-	// -------------------------------------------------------------------------------
 	/*
+	* -------------------------------------------------------------------------------
 	* 逻辑块的实现
 	* LogicUnitBase为所有逻辑块的基类
 	* 不同类型有不同派生，靠模板实现泛型，依次特化
 	*
-	* 行 2019.11.5
+	*  -- 行 2019.11.5
+	* -------------------------------------------------------------------------------
 	*/
+
+	
 	/*
 	 * 其他类型的基类
 	 * 单输入输出
+	 * 
 	 */
 
 	class LogicBase : public Logic
 	{
 	public:
-		explicit LogicBase(const string& luaAddr, const WidthSpec& widthSpec, bool isInBuffered, bool isOutBuffered)
+		explicit LogicBase(const string& luaAddr, const WidthSpec& widthSpec, uint64_t cycleCount)
 			: Logic(luaAddr)
-			, _inPort(isInBuffered, widthSpec)
-			, _outPort(isOutBuffered, widthSpec)
+			, _inPort(widthSpec)
+			, _cycleBuffer(cycleCount, widthSpec)
+			, _outPort(widthSpec)
 		{
 			luaInit();
 		}
@@ -182,12 +188,7 @@ namespace ProjectA
 
 	protected:
 
-		void runInPorts()
-		{
-			_inPort.run();
-		}
-
-		void runOutPorts()
+		void sendOutPortData() const
 		{
 			_outPort.run();
 		}
@@ -211,18 +212,20 @@ namespace ProjectA
 
 		vector<uint64_t> getInput(uint64_t index) const
 		{
-			return _inPort.getSendArea().getDataCellsUnit64();
+			return _inPort.getData().getDataCellsUnit64();
 		}
 
+		// set到CycleBuffer的准备区
 		void setOutput(uint64_t index, const vector<uint64_t>& data)
 		{
-			Data temp(_outPort.getSendArea()); // 拿Spec
+			Data temp(_outPort.getWidthSpec()); // 拿Spec
 			temp.setValue(data);
-			_outPort.setPrepareArea(temp);
+			_cycleBuffer.setPrepareData(temp);
 		}
 
 	protected:
 		Port _inPort;
+		CycleBuffer _cycleBuffer;
 		Port _outPort;
 	};
 
@@ -230,16 +233,15 @@ namespace ProjectA
 	/*
 	 * MEM类型的LogicUnit
 	 *
-	 * 输入Port不打拍，直接执行脚本逻辑
-	 * 输出Port打拍
+	 * 用CycleBuffer来计数拍子
 	 *
 	 */
 	template<>
 	class LogicUnit<MEM> : public LogicBase, public NonCopyable, public NonMovable
 	{
 	public:
-		LogicUnit(const string& luaAddr, size_t memSize, WidthSpec widthSpec, bool isInBuffered, bool isOutBuffered)
-			: LogicBase(luaAddr, widthSpec, isInBuffered, isOutBuffered)
+		LogicUnit(const string& luaAddr, WidthSpec widthSpec, size_t memSize, uint64_t cycleCount)
+			: LogicBase(luaAddr, widthSpec, cycleCount)
 			, _mem(nullptr)
 		{
 			_mem = new Component<MEM>{ memSize, widthSpec };
@@ -253,11 +255,13 @@ namespace ProjectA
 	public:
 		void run() override
 		{
-			runInPorts();
-			// 执行脚本
+			// 执行脚本，脚本中通过注册的getInput函数拿到input的数据
 			luaL_dofile(_luaState, _luaScriptName.c_str());
-			// Lua中应该已经setOutput函数把输出放在了outPort的准备区
-			runOutPorts();
+			// Lua中应该已经setOutput函数把输出放在了CycleBuffer的准备区
+			_cycleBuffer.run();
+			_outPort.setData(_cycleBuffer.getSendArea());
+			// outPort把数据送到下一个input
+			_outPort.run();
 		}
 
 		Component<MEM>* getPtr() const
