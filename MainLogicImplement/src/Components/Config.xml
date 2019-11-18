@@ -11,7 +11,7 @@
         <OutPort specName="32d1v1b" isBuffered="false"/>
 
         <LogicUnit name="inBuffer1" type="MEM" scriptName="inBuffer1.lua">
-            <Parameter size="5" specName="32d1v"/>
+            <Parameter size="5" specName="32d1v" cycleCounter="1"/>
         </LogicUnit>
 
         <Connection>

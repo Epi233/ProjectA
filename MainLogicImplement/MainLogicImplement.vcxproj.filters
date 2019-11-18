@@ -48,9 +48,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Core">
       <UniqueIdentifier>{818bda21-9b38-44bb-98cc-300a713246d4}</UniqueIdentifier>
     </Filter>
