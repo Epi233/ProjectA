@@ -60,7 +60,6 @@ namespace ProjectA
 			_prepareArea = data;
 		}
 
-		// 拿发送区内容务必先检测是否有效
 		Data getSendArea() const
 		{
 			return _sendArea;
@@ -68,7 +67,7 @@ namespace ProjectA
 
 		void run()
 		{
-			// 计数为0需要单独处理
+			// 计数为0需要单独处理 不过缓冲区
 			if (_cycleNum == 0)
 			{
 				_sendArea = _prepareArea;

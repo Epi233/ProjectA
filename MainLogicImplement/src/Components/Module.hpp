@@ -55,10 +55,10 @@ namespace ProjectA
 			_logicUnits.push_back(base_ptr);
 		}
 		
-		void createLogicUnitMem(const string& memName, const string& luaAddr, size_t memSize, WidthSpec widthSpec, bool isInBuffered, bool isOutBuffered)
+		void createLogicUnitMem(const string& memName, const string& luaAddr, size_t memSize, WidthSpec widthSpec, uint64_t cycleCount)
 		{
 			// 创建MEM逻辑组件
-			LogicUnit<MEM>* ptr = new LogicUnit<MEM>(luaAddr, memSize, widthSpec, isInBuffered, isOutBuffered);
+			LogicUnit<MEM>* ptr = new LogicUnit<MEM>(luaAddr, widthSpec, memSize, cycleCount);
 			// Database更新新组件
 			_database.insertComponentMem(memName, ptr->getPtr());
 			// 逻辑组件加载Database函数
@@ -120,8 +120,9 @@ namespace ProjectA
 			XMLElement* xmlParameters = xmlLogicUnit->FirstChildElement("Parameter");
 			uint64_t size = std::stoi(xmlParameters->FindAttribute("size")->Value());
 			const WidthSpec& widthSpec = _dataTypeRepo->getWidthSpec(xmlParameters->FindAttribute("specName")->Value());
+			uint64_t cycleCounter = std::stoi(xmlParameters->FindAttribute("cycleCounter")->Value());
 
-			createLogicUnitMem(name, scriptAddr, size, widthSpec);
+			createLogicUnitMem(name, scriptAddr, size, widthSpec, cycleCounter);
 		}
 		
 #pragma endregion 
