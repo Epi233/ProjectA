@@ -26,8 +26,8 @@ namespace ProjectA
 	public:
 		explicit DataCell(uint64_t size)
 			: _size(size)
-			, _dataBinary(_size, '0')
 		{
+			generateFromNumber(uint64_t(0));
 		}
 
 		DataCell(uint64_t size, uint64_t data)
@@ -120,5 +120,47 @@ namespace ProjectA
 	private:
 		uint64_t _size;
 		std::string _dataBinary;
+
+	public:
+		static string numToComplement(uint64_t stringSize, uint64_t num)
+		{
+			
+		}
+
+		static string numToComplement(uint64_t stringSize, int64_t num)
+		{
+
+		}
+
+		static uint64_t complementToUnsigned(const string& str)
+		{
+			
+		}
+
+		static uint64_t complementToSigned(const string& str)
+		{
+
+		}
+
+		static void reverseAndAddOne(string& str)
+		{
+			for (auto& i : str)
+				i = i == '0' ? '1' : '0';
+
+			bool flag = true;
+			int point = static_cast<int>(str.size() - 1);
+			while (flag && point >= 0)
+			{
+				if (str[point] == '1')
+					str[point] = '0';
+				else
+				{
+					str[point] = '1';
+					flag = false;
+				}
+
+				point--;
+			}
+		}
 	};
 }
