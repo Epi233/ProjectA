@@ -22,32 +22,32 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{ACE909B0-A56F-47E7-B571-9C63E70C43FA}</ProjectGuid>
     <RootNamespace>MainLogicImplement</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -130,14 +130,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Components\Components\ComponentInterface.hpp" />
-    <ClInclude Include="src\Components\Components\MemUnit.hpp" />
+    <ClInclude Include="src\Components\ComponentInterface.hpp" />
+    <ClInclude Include="src\Components\Components.hpp" />
+    <ClInclude Include="src\Components\CycleBuffer.hpp" />
     <ClInclude Include="src\Components\Database.hpp" />
     <ClInclude Include="src\Components\DataCell.hpp" />
-    <ClInclude Include="src\Components\LogicUnit\LogicUnitBase.hpp" />
-    <ClInclude Include="src\Components\LogicUnit\LogicUnitEmpty.hpp" />
-    <ClInclude Include="src\Components\LogicUnit\LogicUnitInterface.hpp" />
-    <ClInclude Include="src\Components\LogicUnit\LogicUnitMem.hpp" />
+    <ClInclude Include="src\Components\LogicUnit.hpp" />
     <ClInclude Include="src\Components\Data.hpp" />
     <ClInclude Include="src\Components\Module.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />
@@ -149,9 +147,6 @@
     <ClInclude Include="src\Util\Util.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DRamSim2\DRamSim2.vcxproj">
       <Project>{702f75fc-3345-4214-be92-71612edd591c}</Project>
     </ProjectReference>
@@ -160,6 +155,9 @@
     <Xml Include="src\Components\Config.xml">
       <SubType>Designer</SubType>
     </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
