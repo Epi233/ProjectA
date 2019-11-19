@@ -72,4 +72,7 @@
       <Filter>Config</Filter>
     </Xml>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
 </Project>
