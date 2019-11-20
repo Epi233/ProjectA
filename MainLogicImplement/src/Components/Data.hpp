@@ -29,7 +29,7 @@ namespace ProjectA
 				_dataCells.emplace_back(size);
 		}
 
-		Data(const WidthSpec& spec, const vector<uint64_t>& value)
+		Data(const WidthSpec& spec, const vector<int64_t>& value)
 			: _dataCells(vector<DataCell>{})
 		{
 			DEBUG_ASSERT(spec.size() == value.size());
@@ -69,19 +69,9 @@ namespace ProjectA
 			_dataCells.emplace_back(size);
 		}
 
-		void emplace_back(uint64_t size, uint64_t data)
+		void emplace_back(uint64_t size, int64_t data)
 		{
 			_dataCells.emplace_back(size, data);
-		}
-
-		void emplace_back(uint64_t size, const string& data)
-		{
-			_dataCells.emplace_back(size, data);
-		}
-
-		void emplace_back(uint64_t size, string&& data)
-		{
-			_dataCells.emplace_back(size, std::forward<string>(data));
 		}
 
 		const vector<DataCell>& getDataCells() const
@@ -89,15 +79,15 @@ namespace ProjectA
 			return _dataCells;
 		}
 
-		vector<uint64_t> getDataCellsUnit64() const
+		vector<int64_t> getDataCellsInt64() const
 		{
-			vector<uint64_t> result(_dataCells.size());
+			vector<int64_t> result(_dataCells.size());
 			for (size_t i = 0; i < result.size(); i++)
-				result[i] = _dataCells[i].getData<uint64_t>();
+				result[i] = _dataCells[i].getData<int64_t>();
 			return result;
 		}
 
-		void setValue(const vector<uint64_t>& value)
+		void setValue(const vector<int64_t>& value)
 		{
 			DEBUG_ASSERT(_dataCells.size() == value.size());
 			for (size_t i = 0; i < value.size(); ++i)

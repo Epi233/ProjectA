@@ -1,4 +1,17 @@
 /*
+ * DataCell重新设计
+ * 不再使用字符串存储来来实现功能
+ * 内部用一个vector<bool>来存
+ * (因为不会返回引用，出于效率考虑不用Bool用bool)
+ * 所有数都按符号数来写入
+ * 内部存补码
+ * 输出可以以符号数输出，也可以强制解读为无符号，也可以输出字符串
+ *
+ * 取消了用字符串来构造的构造函数
+ * 感觉没什么用
+ * 
+ *  -- 行 2019.11.20 -- 测试过
+ *
  * DataCell 为基本数据单元
  * 没有默认构造函数
  * 单参数构造是比特位
@@ -6,11 +19,13 @@
  * 支持有符号，无信号，和01字符串
  * 支持到64位
  *
+ * 内部用01字符串存储来实现功能
+ *
  * 赋值时会自动检查size的匹配
  * 只有size匹配才可以赋值
  *
  *
- * 行 2019.11.5
+ *  -- 行 2019.11.5
  */
 
 
@@ -21,38 +36,29 @@
 
 namespace ProjectA
 {
+	// 不从vector<bool>中返回引用，所以用bool不用Bool
 	class DataCell
 	{
 	public:
 		explicit DataCell(uint64_t size)
-			: _size(size)
+			: _data(size)
 		{
-			generateFromNumber(uint64_t(0));
 		}
 
-		DataCell(uint64_t size, uint64_t data)
-			: _size(size)
+		DataCell(uint64_t size, int64_t data)
+			: _data(size)
 		{
 			generateFromNumber(data);
 		}
 
-		DataCell(uint64_t size, const std::string& data)
-			: _size(size)
-		{
-			stringBinaryCheck(data);
-			generateFromString(data);
-		}
-
 		DataCell(const DataCell& rhs) = default;
 
-		DataCell& operator= (const DataCell& data)
+	public:
+		uint64_t getSize() const
 		{
-			if (_size != data._size)
-				throw std::exception("DataCell Size Mismatch");
-			_dataBinary = data._dataBinary;
-			return *this;
+			return _data.size();
 		}
-
+		
 		template <typename Type>
 		Type getData() const
 		{
@@ -63,85 +69,52 @@ namespace ProjectA
 		template <>
 		uint64_t getData() const
 		{
-			return std::bitset<64>(_dataBinary).to_ullong();
+			string str = "";
+			for (auto i : _data)
+				str += i ? '1' : '0';
+			return bitset<32>(str).to_ullong();
 		}
 
 		template <>
 		int64_t getData() const
 		{
-			return static_cast<int64_t>(std::bitset<64>(_dataBinary).to_ullong());
+			if (!_data[0])
+				return static_cast<int64_t>(getData<uint64_t>());
+			else
+			{
+				string temp = getData<string>();
+				reverseAndAddOne(temp);
+				return -static_cast<int64_t>(bitset<32>(temp).to_ullong());
+			}
 		}
 
 		template <>
 		std::string getData() const
 		{
-			return _dataBinary;
-		}
-
-		uint64_t getSize() const
-		{
-			return _size;
+			string str = "";
+			for (auto i : _data)
+				str += i ? '1' : '0';
+			return str;
 		}
 
 	private:
 		void generateFromNumber(int64_t data)
 		{
-			generateFromString(std::bitset<64>(data).to_string());
-		}
-
-		void generateFromNumber(uint64_t data)
-		{
-			generateFromString(std::bitset<64>(data).to_string());
-		}
-
-		// 检查一个string是不是01序列
-		void stringBinaryCheck(const std::string& str)
-		{
-			for (auto i : str)
-				if (i != '0' && i != '1')
-					throw std::exception("Binary String is not only 0 and 1");
-		}
-
-		void generateFromString(const std::string& str)
-		{
-			_dataBinary = "";
-			// 输入string必须是一个01序列
-			auto itr = str.end();
-			--itr;
-			uint64_t count = _size;
-			while (count--)
+			std::bitset<64> tempSet(data);
+			size_t pos = 0;
+			int size = static_cast<int>(_data.size() - 1);
+			while (size >= 0)
 			{
-				_dataBinary += *itr;
-				--itr;
+				_data[size] = tempSet[pos];
+				size--;
+				pos++;
 			}
-			std::reverse(_dataBinary.begin(), _dataBinary.end());
 		}
 
 	private:
-		uint64_t _size;
-		std::string _dataBinary;
+		vector<bool> _data;
 
-	public:
-		static string numToComplement(uint64_t stringSize, uint64_t num)
-		{
-			
-		}
-
-		static string numToComplement(uint64_t stringSize, int64_t num)
-		{
-
-		}
-
-		static uint64_t complementToUnsigned(const string& str)
-		{
-			
-		}
-
-		static uint64_t complementToSigned(const string& str)
-		{
-
-		}
-
+	private:
 		static void reverseAndAddOne(string& str)
 		{
 			for (auto& i : str)
@@ -163,4 +136,5 @@ namespace ProjectA
 			}
 		}
 	};
+
 }
