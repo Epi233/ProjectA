@@ -2,18 +2,6 @@
 
 #include "Components/Data.hpp"
 
-namespace Microsoft { namespace VisualStudio { namespace CppUnitTestFramework
-{
-	template <>
-	std::wstring ToString<vector<int64_t>>(const class vector<int64_t>& t)
-	{
-		std::wstring temp;
-		for (auto i : t)
-			temp += std::to_wstring(i) + L"_";
-		return temp;
-	}
-}}}
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace MainLogicTest
@@ -62,6 +50,17 @@ namespace MainLogicTest
 			Assert::AreEqual(int64_t(-300), dataCell.getData<int64_t>());
 			Assert::AreEqual(uint64_t(10), dataCell.getSize());
 		}
+
+		TEST_METHOD(dataCellTest5)
+		{
+			// 测试负数的截断
+			ProjectA::DataCell dataCell(3, -123);
+			// Logger::WriteMessage(dataCell.getData<string>().c_str());
+			Assert::AreEqual("101", dataCell.getData<string>().c_str());
+			Assert::AreEqual(uint64_t(5), dataCell.getData<uint64_t>());
+			Assert::AreEqual(int64_t(-3), dataCell.getData<int64_t>());
+			Assert::AreEqual(uint64_t(3), dataCell.getSize());
+		}
 	};
 
 	TEST_CLASS(DataTest)
@@ -71,8 +70,21 @@ namespace MainLogicTest
 		{
 			ProjectA::WidthSpec widthSpec{3, 2, 1, 32};
 			ProjectA::Data data(widthSpec);
+			Assert::AreEqual("[0_0_0_0]", data.getDataString<int64_t>().c_str());
 
-			Assert::AreEqual(vector<int64_t>{0, 0, 0, 0}, data.getDataCellsInt64());
+			// DataCell会截断数据
+			vector<int64_t> value1{ 123, 321, 1234, 4321 };
+			data.setValue(value1);
+			Assert::AreEqual("[3_1_0_4321]", data.getDataString<int64_t>().c_str());
+
+			// DataCell会截断数据
+			vector<int64_t> value2{ -123, -321, -1234, -4321 };
+			data.setValue(value2);
+			Assert::AreEqual("[-3_-1_0_-4321]", data.getDataString<int64_t>().c_str());
+
+			// clear测试
+			data.clearValue();
+			Assert::AreEqual("[0_0_0_0]", data.getDataString<int64_t>().c_str());
 		}
 	};
 }

@@ -14,10 +14,27 @@
     <ClCompile Include="src\DataTest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\CycleBufferTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModuleTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tinyxml2.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Assist.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\tinyxml2.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="src\ModuleTestConfig.xml">
+      <Filter>src</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

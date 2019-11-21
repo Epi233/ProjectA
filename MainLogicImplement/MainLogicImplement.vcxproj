@@ -135,6 +135,7 @@
     <ClInclude Include="src\Components\CycleBuffer.hpp" />
     <ClInclude Include="src\Components\Database.hpp" />
     <ClInclude Include="src\Components\DataCell.hpp" />
+    <ClInclude Include="src\Components\DataTypeRepo.hpp" />
     <ClInclude Include="src\Components\LogicUnit.hpp" />
     <ClInclude Include="src\Components\Data.hpp" />
     <ClInclude Include="src\Components\Module.hpp" />

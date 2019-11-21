@@ -152,7 +152,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CycleBufferTest.cpp" />
     <ClCompile Include="src\DataTest.cpp" />
+    <ClCompile Include="src\ModuleTest.cpp" />
+    <ClCompile Include="src\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MainLogicImplement\MainLogicImplement.vcxproj">
@@ -161,6 +164,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Assist.h" />
+    <ClInclude Include="src\tinyxml2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="src\ModuleTestConfig.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

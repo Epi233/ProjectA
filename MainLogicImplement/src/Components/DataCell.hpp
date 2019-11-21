@@ -97,6 +97,11 @@ namespace ProjectA
 			return str;
 		}
 
+		void setZero()
+		{
+			std::fill(begin(_data), end(_data), false);
+		}
+
 	private:
 		void generateFromNumber(int64_t data)
 		{

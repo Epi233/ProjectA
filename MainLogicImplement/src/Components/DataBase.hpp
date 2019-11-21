@@ -18,30 +18,10 @@
 #include "LuaBridge.h"
 #include "Vector.h"
 #include "Data.hpp"
+#include "DataTypeRepo.hpp"
 
 namespace ProjectA
 {
-	class DataTypeRepo
-	{
-	public:
-		DataTypeRepo() = default;
-
-		void insert(const string& name, WidthSpec widthSpec)
-		{
-			_repo[name] = widthSpec;
-		}
-
-		const WidthSpec& getWidthSpec(const string& name) const
-		{
-			auto itr = _repo.find(name);
-			DEBUG_ASSERT(itr != _repo.end());
-			return itr->second;
-		}
-
-	private:
-		unordered_map<string, WidthSpec> _repo;
-	};
-	
 	class Database
 	{
 	public:

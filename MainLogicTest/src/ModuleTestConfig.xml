@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 保留关键字__OUTPORT__不能做LogicUnit的名字 -->
+<Config>
+    <DataTypeDefinition>
+        <DataType name="32d1v" spec="[32][1]"/>
+        <DataType name="32d1v1b" spec="[32][1][1]" />
+    </DataTypeDefinition>
+
+    <Module name="PE">
+
+        <InPort specName="32d1v"/>
+        <InPort specName="32d1v"/>
+        <OutPort specName="32d1v"/>
+        <OutPort specName="32d1v"/>
+
+        <LogicUnit name="inBuffer1" type="MEM" scriptName="inBuffer1.lua">
+            <Parameter size="5" specName="32d1v" cycleCounter="1"/>
+        </LogicUnit>
+
+        <LogicUnit name="inBuffer2" type="MEM" scriptName="inBuffer1.lua">
+            <Parameter size="5" specName="32d1v" cycleCounter="1"/>
+        </LogicUnit>
+
+        <LogicUnit name="inBuffer3" type="MEM" scriptName="inBuffer1.lua">
+            <Parameter size="5" specName="32d1v" cycleCounter="1"/>
+        </LogicUnit>
+
+        <LogicUnit name="inBuffer4" type="MEM" scriptName="inBuffer1.lua">
+            <Parameter size="5" specName="32d1v" cycleCounter="1"/>
+        </LogicUnit>
+
+        <Connection>
+            <InPortOut index="0" targetName="inBuffer1" targetInPortIndex="0"/>
+            <InPortOut index="1" targetName="inBuffer4" targetInPortIndex="0"/>
+            <FreeConnection sourceName="inBuffer1" sourceOutPortIndex="0" targetName="inBuffer2" targetInPortIndex="0"/>
+            <FreeConnection sourceName="inBuffer2" sourceOutPortIndex="0" targetName="inBuffer3" targetInPortIndex="0"/>
+            <FreeConnection sourceName="inBuffer3" sourceOutPortIndex="0" targetName="__OUTPORT__" targetInPortIndex="0"/>
+            <FreeConnection sourceName="inBuffer4" sourceOutPortIndex="0" targetName="__OUTPORT__" targetInPortIndex="1"/>
+        </Connection>
+
+    </Module>
+</Config>
