@@ -13,19 +13,19 @@
         <OutPort specName="32d1v"/>
         <OutPort specName="32d1v"/>
 
-        <LogicUnit name="inBuffer1" type="MEM" scriptName="inBuffer1.lua">
+        <LogicUnit name="inBuffer1" type="MEM" scriptName="../MainLogicTest/src/ModuleTestResource/inBuffer1.lua">
             <Parameter size="5" specName="32d1v" cycleCounter="1"/>
         </LogicUnit>
 
-        <LogicUnit name="inBuffer2" type="MEM" scriptName="inBuffer1.lua">
+        <LogicUnit name="inBuffer2" type="MEM" scriptName="../MainLogicTest/src/ModuleTestResource/inBuffer2.lua">
             <Parameter size="5" specName="32d1v" cycleCounter="1"/>
         </LogicUnit>
 
-        <LogicUnit name="inBuffer3" type="MEM" scriptName="inBuffer1.lua">
+        <LogicUnit name="inBuffer3" type="MEM" scriptName="../MainLogicTest/src/ModuleTestResource/inBuffer3.lua">
             <Parameter size="5" specName="32d1v" cycleCounter="1"/>
         </LogicUnit>
 
-        <LogicUnit name="inBuffer4" type="MEM" scriptName="inBuffer1.lua">
+        <LogicUnit name="inBuffer4" type="MEM" scriptName="../MainLogicTest/src/ModuleTestResource/inBuffer4.lua">
             <Parameter size="5" specName="32d1v" cycleCounter="1"/>
         </LogicUnit>
 

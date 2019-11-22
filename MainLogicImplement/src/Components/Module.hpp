@@ -86,7 +86,7 @@ namespace ProjectA
 			}
 			// out ports
 			XMLElement* xmlOutPort = xmlModule->FirstChildElement("OutPort");
-			while (xmlInPort)
+			while (xmlOutPort)
 			{
 				const WidthSpec& widthSpec = _dataTypeRepo->getWidthSpec(xmlOutPort->FindAttribute("specName")->Value());
 				_outPorts.emplace_back(widthSpec);
