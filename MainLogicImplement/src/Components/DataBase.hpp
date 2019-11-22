@@ -45,8 +45,8 @@ namespace ProjectA
 		{
 			luabridge::getGlobalNamespace(luaState)
 				.beginClass<Database>("Database")
-				.addFunction("readMem", &readMem)
-				.addFunction("writeMem", &writeMem)
+				.addFunction("readMem", &Database::readMem)
+				.addFunction("writeMem", &Database::writeMem)
 				.endClass();
 
 			luabridge::push(luaState, &*this);
@@ -63,7 +63,7 @@ namespace ProjectA
 			return result;
 		}
 
-		void writeMem(const string& memName, uint64_t addr, const vector<uint64_t>& data)
+		void writeMem(const string& memName, uint64_t addr, const vector<int64_t>& data)
 		{
 			Data temp(_memDatabase[memName]->getWidthSpec());
 			temp.setValue(data);

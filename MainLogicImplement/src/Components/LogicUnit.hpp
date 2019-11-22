@@ -118,14 +118,14 @@ namespace ProjectA
 				port.run();
 		}
 
-		void addInPort(bool isBuffered, const WidthSpec& widthSpec)
+		void addInPort(const WidthSpec& widthSpec)
 		{
-			_inPorts.emplace_back(isBuffered, widthSpec);
+			_inPorts.emplace_back(widthSpec);
 		}
 
-		void addOutPort(bool isBuffered, const WidthSpec& widthSpec)
+		void addOutPort(const WidthSpec& widthSpec)
 		{
-			_outPorts.emplace_back(isBuffered, widthSpec);
+			_outPorts.emplace_back(widthSpec);
 		}
 
 	protected: /** for Lua */
