@@ -41,6 +41,16 @@ namespace ProjectA
 			for (auto& port : _outPorts)
 				port.run();
 		}
+
+		Port* getInPort(uint64_t index)
+		{
+			return &_inPorts[index];
+		}
+
+		Port* getOutPort(uint64_t index)
+		{
+			return &_outPorts[index];
+		}
 		
 #pragma region ´´½¨LogicUnit
 	private:
