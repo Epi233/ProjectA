@@ -35,7 +35,7 @@ namespace ProjectA
 		{
 			auto itr = _repo.find(name);
 			DEBUG_ASSERT(itr != _repo.end());
-			return itr->second;
+			return itr->second;		//map<A,B> -> <iterator -> first, iterator -> second>
 		}
 
 	private:

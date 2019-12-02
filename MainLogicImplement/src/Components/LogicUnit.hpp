@@ -43,7 +43,7 @@ namespace ProjectA
 
 	public:
 
-		virtual void run() = 0;
+		virtual void run() = 0;   //Pure virtual function; Can't be instantiated, only be inherited.
 
 		void luaInit()
 		{
@@ -104,14 +104,18 @@ namespace ProjectA
 				port.run();
 		}
 
-		void addInPort(bool isBuffered, const WidthSpec& widthSpec)
+		//void addInPort(bool isBuffered, const WidthSpec& widthSpec)
+		void addInPort(const WidthSpec& widthSpec)
 		{
-			_inPorts.emplace_back(isBuffered, widthSpec);
+			//_inPorts.emplace_back(isBuffered, widthSpec);
+			_inPorts.emplace_back(widthSpec);
 		}
 
-		void addOutPort(bool isBuffered, const WidthSpec& widthSpec)
+		//void addOutPort(bool isBuffered, const WidthSpec& widthSpec)
+		void addOutPort(const WidthSpec& widthSpec)
 		{
-			_outPorts.emplace_back(isBuffered, widthSpec);
+			//_outPorts.emplace_back(isBuffered, widthSpec);
+			_outPorts.emplace_back(widthSpec);
 		}
 
 	protected: /** for Lua */
@@ -131,7 +135,7 @@ namespace ProjectA
 		{
 			if (index >= _inPorts.size())
 				throw exception("Input Index Out of Boundary");
-			return _inPorts[index].getData().getDataCellsUnit64();
+			return _inPorts[index].getData().getDataCellsUint64();  //Modify Unit64 to Uint64
 		}
 
 		void setOutput(uint64_t index, const vector<uint64_t>& data)
@@ -212,7 +216,7 @@ namespace ProjectA
 
 		vector<uint64_t> getInput(uint64_t index) const
 		{
-			return _inPort.getData().getDataCellsUnit64();
+			return _inPort.getData().getDataCellsUint64();
 		}
 
 		// set到CycleBuffer的准备区
