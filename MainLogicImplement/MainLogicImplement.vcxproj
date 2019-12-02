@@ -91,11 +91,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\ProjectA_Debug\include\LuaBridge;$(SolutionDir)\ProjectA_Debug\include\Lua;$(SolutionDir)\ProjectA_Debug\include\TinyXml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ThirdParty\include\TinyXml2;$(SolutionDir)\ThirdParty\include\LuaBridge;$(SolutionDir)\ThirdParty\include\Lua</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>lua.lib;tinyXml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\ProjectA_Debug\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -120,13 +120,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\ProjectA_Relase\include\LuaBridge;$(SolutionDir)\ProjectA_Relase\include\TinyXml2;$(SolutionDir)\ProjectA_Relase\include\Lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ThirdParty\include\TinyXml2;$(SolutionDir)\ThirdParty\include\LuaBridge;$(SolutionDir)\ThirdParty\include\Lua</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>LOGIC_DLLEXPORT;lua.lib;tinyXml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\ProjectA_Relase\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -135,6 +135,7 @@
     <ClInclude Include="src\Components\CycleBuffer.hpp" />
     <ClInclude Include="src\Components\Database.hpp" />
     <ClInclude Include="src\Components\DataCell.hpp" />
+    <ClInclude Include="src\Components\DataTypeRepo.hpp" />
     <ClInclude Include="src\Components\LogicUnit.hpp" />
     <ClInclude Include="src\Components\Data.hpp" />
     <ClInclude Include="src\Components\Module.hpp" />
