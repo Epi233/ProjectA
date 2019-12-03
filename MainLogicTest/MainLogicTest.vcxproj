@@ -166,12 +166,18 @@
     <ClInclude Include="src\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="src\ModuleTestConfig.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MainLogicImplement\MainLogicImplement.vcxproj">
       <Project>{ace909b0-a56f-47e7-b571-9c63e70c43fa}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="src\ModuleTestResource\ModuleTestConfig.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\ModuleTestResource\inBuffer1.lua" />
+    <None Include="src\ModuleTestResource\inBuffer2.lua" />
+    <None Include="src\ModuleTestResource\inBuffer3.lua" />
+    <None Include="src\ModuleTestResource\inBuffer4.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

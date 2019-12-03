@@ -9,6 +9,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="资源文件\ModuleTestResource">
+      <UniqueIdentifier>{9b93d041-58db-4a74-99ea-262ec8bc28bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DataTest.cpp">
@@ -33,8 +36,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="src\ModuleTestConfig.xml">
-      <Filter>src</Filter>
+    <Xml Include="src\ModuleTestResource\ModuleTestConfig.xml">
+      <Filter>资源文件\ModuleTestResource</Filter>
     </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\ModuleTestResource\inBuffer1.lua">
+      <Filter>资源文件\ModuleTestResource</Filter>
+    </None>
+    <None Include="src\ModuleTestResource\inBuffer2.lua">
+      <Filter>资源文件\ModuleTestResource</Filter>
+    </None>
+    <None Include="src\ModuleTestResource\inBuffer3.lua">
+      <Filter>资源文件\ModuleTestResource</Filter>
+    </None>
+    <None Include="src\ModuleTestResource\inBuffer4.lua">
+      <Filter>资源文件\ModuleTestResource</Filter>
+    </None>
   </ItemGroup>
 </Project>

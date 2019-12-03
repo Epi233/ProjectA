@@ -41,6 +41,16 @@ namespace ProjectA
 			for (auto& port : _outPorts)
 				port.run();
 		}
+
+		Port* getInPort(uint64_t index)
+		{
+			return &_inPorts[index];
+		}
+
+		Port* getOutPort(uint64_t index)
+		{
+			return &_outPorts[index];
+		}
 		
 #pragma region ´´½¨LogicUnit
 	private:
@@ -86,7 +96,7 @@ namespace ProjectA
 			}
 			// out ports
 			XMLElement* xmlOutPort = xmlModule->FirstChildElement("OutPort");
-			while (xmlInPort)
+			while (xmlOutPort)
 			{
 				const WidthSpec& widthSpec = _dataTypeRepo->getWidthSpec(xmlOutPort->FindAttribute("specName")->Value());
 				_outPorts.emplace_back(widthSpec);
