@@ -18,30 +18,10 @@
 #include "LuaBridge.h"
 #include "Vector.h"
 #include "Data.hpp"
+#include "DataTypeRepo.hpp"
 
 namespace ProjectA
 {
-	class DataTypeRepo
-	{
-	public:
-		DataTypeRepo() = default;
-
-		void insert(const string& name, WidthSpec widthSpec)
-		{
-			_repo[name] = widthSpec;
-		}
-
-		const WidthSpec& getWidthSpec(const string& name) const
-		{
-			auto itr = _repo.find(name);
-			DEBUG_ASSERT(itr != _repo.end());
-			return itr->second;
-		}
-
-	private:
-		unordered_map<string, WidthSpec> _repo;
-	};
-	
 	class Database
 	{
 	public:
@@ -65,8 +45,8 @@ namespace ProjectA
 		{
 			luabridge::getGlobalNamespace(luaState)
 				.beginClass<Database>("Database")
-				.addFunction("readMem", &readMem)
-				.addFunction("writeMem", &writeMem)
+				.addFunction("readMem", &Database::readMem)
+				.addFunction("writeMem", &Database::writeMem)
 				.endClass();
 
 			luabridge::push(luaState, &*this);
@@ -83,7 +63,7 @@ namespace ProjectA
 			return result;
 		}
 
-		void writeMem(const string& memName, uint64_t addr, const vector<uint64_t>& data)
+		void writeMem(const string& memName, uint64_t addr, const vector<int64_t>& data)
 		{
 			Data temp(_memDatabase[memName]->getWidthSpec());
 			temp.setValue(data);

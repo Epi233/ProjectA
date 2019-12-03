@@ -56,6 +56,10 @@ namespace ProjectA
 			return _luaState;
 		}
 
+		virtual Port* getInPortPtr(uint64_t index) = 0;
+		
+		virtual Port* getOutPortPtr(uint64_t index) = 0;
+
 	protected:
 		string _luaScriptName;
 		lua_State* _luaState;
@@ -90,6 +94,16 @@ namespace ProjectA
 			runOutPorts();
 		}
 
+		Port* getInPortPtr(uint64_t index) override
+		{
+			return &_inPorts[index];
+		}
+
+		Port* getOutPortPtr(uint64_t index) override
+		{
+			return &_outPorts[index];
+		}
+
 	protected:
 
 		void runInPorts()
@@ -104,14 +118,14 @@ namespace ProjectA
 				port.run();
 		}
 
-		void addInPort(bool isBuffered, const WidthSpec& widthSpec)
+		void addInPort(const WidthSpec& widthSpec)
 		{
-			_inPorts.emplace_back(isBuffered, widthSpec);
+			_inPorts.emplace_back(widthSpec);
 		}
 
-		void addOutPort(bool isBuffered, const WidthSpec& widthSpec)
+		void addOutPort(const WidthSpec& widthSpec)
 		{
-			_outPorts.emplace_back(isBuffered, widthSpec);
+			_outPorts.emplace_back(widthSpec);
 		}
 
 	protected: /** for Lua */
@@ -127,14 +141,14 @@ namespace ProjectA
 			lua_setglobal(_luaState, "self");
 		}
 
-		vector<uint64_t> getInput(uint64_t index)
+		vector<int64_t> getInput(uint64_t index)
 		{
 			if (index >= _inPorts.size())
 				throw exception("Input Index Out of Boundary");
-			return _inPorts[index].getData().getDataCellsUnit64();
+			return _inPorts[index].getData().getDataCells<int64_t>();
 		}
 
-		void setOutput(uint64_t index, const vector<uint64_t>& data)
+		void setOutput(uint64_t index, const vector<int64_t>& data)
 		{
 			if (index >= _outPorts.size())
 				throw exception("Input Index Out of Boundary");
@@ -186,6 +200,20 @@ namespace ProjectA
 
 		void run() override = 0;
 
+		Port* getInPortPtr(uint64_t index) override
+		{
+			if (index != 0)
+				throw std::exception("input port index must be zero for single inout logic unit");
+			return &_inPort;
+		}
+
+		Port* getOutPortPtr(uint64_t index) override
+		{
+			if (index != 0)
+				throw std::exception("output port index must be zero for single inout logic unit");
+			return &_outPort;
+		}
+
 	protected:
 
 		void sendOutPortData() const
@@ -210,13 +238,13 @@ namespace ProjectA
 				.endClass();
 		}
 
-		vector<uint64_t> getInput(uint64_t index) const
+		vector<int64_t> getInput(uint64_t index) const
 		{
-			return _inPort.getData().getDataCellsUnit64();
+			return _inPort.getData().getDataCells<int64_t>();
 		}
 
 		// set到CycleBuffer的准备区
-		void setOutput(uint64_t index, const vector<uint64_t>& data)
+		void setOutput(uint64_t index, const vector<int64_t>& data)
 		{
 			Data temp(_outPort.getWidthSpec()); // 拿Spec
 			temp.setValue(data);

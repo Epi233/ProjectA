@@ -1,4 +1,6 @@
 /*
+ * -- 行 2019.11.21 -- 测试完毕
+ *
  * 补充支持Cycle = 0的情况
  * 直接过CycleBuffer不打拍子
  *
@@ -75,15 +77,18 @@ namespace ProjectA
 
 			else
 			{
-				// 计数剩下1的pop出来
-				if (_bufferList.begin()->count == 1)
+				if (!_bufferList.empty())
 				{
-					_sendArea = _bufferList.front().data;
-					_bufferList.pop_front();
+					// 计数剩下1的pop出来
+					if (_bufferList.front().count == 1)
+					{
+						_sendArea = _bufferList.front().data;
+						_bufferList.pop_front();
+					}
+					// 全体计数
+					for (auto& i : _bufferList)
+						i.count--;
 				}
-				// 全体计数
-				for (auto& i : _bufferList)
-					i.count--;
 				// 准备区进缓冲区
 				_bufferList.emplace_back(_prepareArea, _cycleNum);
 			}

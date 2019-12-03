@@ -1,4 +1,6 @@
 /*
+ * -- 行 2019.11.21 -- 测试过
+ *
  * Data是由DataCell组成的数据
  * 是流程中数据传递的基本单位
  * WidthSpec是Data中每一个Cell的size组成的vector
@@ -29,7 +31,7 @@ namespace ProjectA
 				_dataCells.emplace_back(size);
 		}
 
-		Data(const WidthSpec& spec, const vector<uint64_t>& value)
+		Data(const WidthSpec& spec, const vector<int64_t>& value)
 			: _dataCells(vector<DataCell>{})
 		{
 			DEBUG_ASSERT(spec.size() == value.size());
@@ -48,60 +50,117 @@ namespace ProjectA
 			return *this;
 		}
 
-	public:
+	public: // 对内部vector进行封装用的函数
 		DataCell& operator[] (size_t num)
 		{
 			return _dataCells[num];
 		}
 
-		void push_back(const DataCell& dataCell)
+	public:
+		// 设置值
+		void setValue(const vector<int64_t>& value)
 		{
-			_dataCells.push_back(dataCell);
+			DEBUG_ASSERT(_dataCells.size() == value.size());
+			for (size_t i = 0; i < value.size(); ++i)
+				_dataCells[i] = DataCell(_dataCells[i].getSize(), value[i]);
 		}
 
-		void push_back(DataCell&& dataCell)
+		// 所有cell清0
+		void clearValue()
 		{
-			_dataCells.push_back(std::forward<DataCell>(dataCell));
+			for (auto& i : _dataCells)
+				i.setZero();
 		}
-
-		void emplace_back(uint64_t size)
-		{
-			_dataCells.emplace_back(size);
-		}
-
-		void emplace_back(uint64_t size, uint64_t data)
-		{
-			_dataCells.emplace_back(size, data);
-		}
-
-		void emplace_back(uint64_t size, const string& data)
-		{
-			_dataCells.emplace_back(size, data);
-		}
-
-		void emplace_back(uint64_t size, string&& data)
-		{
-			_dataCells.emplace_back(size, std::forward<string>(data));
-		}
-
+		
+		// 返回内部vector的常引用
 		const vector<DataCell>& getDataCells() const
 		{
 			return _dataCells;
 		}
 
-		vector<uint64_t> getDataCellsUnit64() const
+		// 返回内部vector的不同形式的值
+		// GCC可能不支持类内特化，移植的时候需要注意
+		template <typename Type>
+		vector<Type> getDataCells() const
+		{
+			throw std::exception(("Can not convert to type " + static_cast<std::string>(typeid(Type).name())).c_str());
+		}
+
+		template <>
+		vector<int64_t> getDataCells<int64_t>() const
+		{
+			vector<int64_t> result(_dataCells.size());
+			for (size_t i = 0; i < result.size(); i++)
+				result[i] = _dataCells[i].getData<int64_t>();
+			return result;
+		}
+
+		template <>
+		vector<uint64_t> getDataCells<uint64_t>() const
 		{
 			vector<uint64_t> result(_dataCells.size());
 			for (size_t i = 0; i < result.size(); i++)
 				result[i] = _dataCells[i].getData<uint64_t>();
 			return result;
 		}
-
-		void setValue(const vector<uint64_t>& value)
+		
+		template <>
+		vector<string> getDataCells<string>() const
 		{
-			DEBUG_ASSERT(_dataCells.size() == value.size());
-			for (size_t i = 0; i < value.size(); ++i)
-				_dataCells[i] = DataCell(_dataCells[i].getSize(), value[i]);
+			vector<string> result(_dataCells.size());
+			for (size_t i = 0; i < result.size(); i++)
+				result[i] = _dataCells[i].getData<string>();
+			return result;
+		}
+
+		// 内部vector整体输出成string
+		// GCC可能不支持类内特化，移植的时候需要注意
+		template <typename Type>
+		string getDataString() const
+		{
+			throw std::exception(("Can not convert to type " + static_cast<std::string>(typeid(Type).name())).c_str());
+		}
+
+		template<>
+		string getDataString<string>() const
+		{
+			string str = "[";
+			for (auto& cell : _dataCells)
+			{
+				str.append(cell.getData<string>());
+				str += '_';
+			}
+			str.pop_back();
+			str += "]";
+			return str;
+		}
+
+		template<>
+		string getDataString<int64_t>() const
+		{
+			string str = "[";
+			for (auto& cell : _dataCells)
+			{
+				str.append(std::to_string(cell.getData<int64_t>()));
+				str += '_';
+			}
+			str.pop_back();
+			str += "]";
+			return str;
+		}
+
+		template<>
+		string getDataString<uint64_t>() const
+		{
+			string str = "[";
+			for (auto& cell : _dataCells)
+			{
+				str.append(std::to_string(cell.getData<uint64_t>()));
+				str += '_';
+			}
+			str.pop_back();
+			str += "]";
+			return str;
 		}
 
 	private:
