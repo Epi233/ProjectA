@@ -117,7 +117,8 @@ namespace ProjectA
 			for (auto& port : _outPorts)
 				port.run();
 		}
-
+	
+	public:
 		void addInPort(const WidthSpec& widthSpec)
 		{
 			_inPorts.emplace_back(widthSpec);
