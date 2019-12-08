@@ -159,7 +159,6 @@
     <ClCompile Include="LogicUnitTest.cpp" />
     <ClCompile Include="src\CycleBufferTest.cpp" />
     <ClCompile Include="src\DataTest.cpp" />
-    <ClCompile Include="src\ModuleTest.cpp" />
     <ClCompile Include="src\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>

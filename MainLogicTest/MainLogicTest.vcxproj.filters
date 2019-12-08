@@ -20,9 +20,6 @@
     <ClCompile Include="src\CycleBufferTest.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ModuleTest.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\tinyxml2.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -57,7 +54,7 @@
       <Filter>资源文件\ModuleTestResource</Filter>
     </None>
     <None Include="pureLogicTest.lua">
-      <Filter>src</Filter>
+      <Filter>资源文件\ModuleTestResource</Filter>
     </None>
   </ItemGroup>
 </Project>
