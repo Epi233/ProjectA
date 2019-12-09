@@ -3,7 +3,6 @@
 #include "Components/LogicUnit.hpp"
 #include "Components/ComponentInterface.hpp"
 #include "lua.hpp"
-#include "iostream"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -16,7 +15,7 @@ namespace MainLogicTest
 		{
 			// test LogicUnit<EMPTY>
 			//ProjectA::LogicUnit<ProjectA::EMPTY> pureLogicTest("../MainLogicTest/src/ModuleTestResource/pureLogicTest.lua");
-			ProjectA::LogicUnit<ProjectA::EMPTY> pureLogicTest("../ModuleTestResource/pureLogicTest.lua");
+			ProjectA::LogicUnit<ProjectA::EMPTY> pureLogicTest("./ModuleTestResource/pureLogicTest.lua");
 
 			// make fake ports to send/load data to/from the real ports
 			ProjectA::Port input1(ProjectA::WidthSpec{ 32 });
@@ -52,20 +51,21 @@ namespace MainLogicTest
 
 			Logger::WriteMessage((input1.getData()).getDataString<int64_t>().c_str());
 
-			input1.run();
-			input2.run();
-
 			Logger::WriteMessage((input1.getData()).getDataString<int64_t>().c_str());
 			Logger::WriteMessage((input2.getData()).getDataString<int64_t>().c_str());
 
-			pureLogicTest.run();  // .lua file name must consist with the luaAddr
+			input1.run();
+			input2.run();
+
+			Logger::WriteMessage("get real input port value");
+			Logger::WriteMessage(pureLogicTest.getInPortPtr(uint64_t(0))->getData().getDataString<string>().c_str());
+			Logger::WriteMessage(pureLogicTest.getInPortPtr(uint64_t(1))->getData().getDataString<string>().c_str());
+
+			pureLogicTest.run();
 
 			Logger::WriteMessage((output1.getData()).getDataString<int64_t>().c_str());
 
-			//Logger::WriteMessage(string("123").c_str());
-			//Logger::WriteMessage((output1.getData()).getDataCells<string>()[0].c_str());
 			Assert::AreEqual(int64_t(12), (output1.getData()).getDataCells<int64_t>()[0]);  // vertify _dataCells[0] 
-			//Assert::AreEqual(11, 11);
 		}
 	};
 }

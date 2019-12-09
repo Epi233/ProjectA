@@ -23,7 +23,7 @@
     <ClCompile Include="src\tinyxml2.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="LogicUnitTest.cpp">
+    <ClCompile Include="src\LogicUnitTest.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <None Include="src\ModuleTestResource\inBuffer4.lua">
       <Filter>资源文件\ModuleTestResource</Filter>
     </None>
-    <None Include="pureLogicTest.lua">
+    <None Include="src\ModuleTestResource\pureLogicTest.lua">
       <Filter>资源文件\ModuleTestResource</Filter>
     </None>
   </ItemGroup>
