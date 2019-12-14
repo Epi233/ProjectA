@@ -24,6 +24,7 @@ namespace ProjectA
 	class Data
 	{
 	public:
+		Data() = default;
 		explicit Data(const WidthSpec& spec)
 			: _dataCells(vector<DataCell>{})
 		{
