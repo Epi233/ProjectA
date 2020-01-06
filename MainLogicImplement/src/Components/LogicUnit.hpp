@@ -186,8 +186,11 @@ namespace ProjectA
 			: LogicBase(inPortsSpec, outPortsSpec, cycleCount)
 			, _scriptPureLogic(func)
 		{
-			_sendScript.resize(_inPorts.size());
-			_receiveScript.resize(_outPorts.size());
+			for (auto& spec : inPortsSpec)
+				_sendScript.emplace_back(spec);
+
+			for (auto& spec : outPortsSpec)
+				_receiveScript.emplace_back(spec);
 		}
 
 	public:

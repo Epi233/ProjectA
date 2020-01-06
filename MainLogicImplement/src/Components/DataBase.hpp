@@ -22,26 +22,6 @@
 
 namespace ProjectA
 {
-	class DataTypeRepo
-	{
-	public:
-		DataTypeRepo() = default;
-
-		void insert(const string& name, WidthSpec widthSpec)
-		{
-			_repo[name] = widthSpec;
-		}
-
-		const WidthSpec& getWidthSpec(const string& name) const
-		{
-			auto itr = _repo.find(name);
-			DEBUG_ASSERT(itr != _repo.end());
-			return itr->second;		//map<A,B> -> <iterator -> first, iterator -> second>
-		}
-
-	private:
-		unordered_map<string, WidthSpec> _repo;
-	};
 	
 	class Database
 	{
@@ -61,18 +41,7 @@ namespace ProjectA
 			_memDatabase[memName] = ptr;
 		}
 
-	public: // Lua接口
-		void luaLoadDatabaseFunctions(lua_State* luaState)
-		{
-			luabridge::getGlobalNamespace(luaState)
-				.beginClass<Database>("Database")
-				.addFunction("readMem", &Database::readMem)
-				.addFunction("writeMem", &Database::writeMem)
-				.endClass();
-
-			luabridge::push(luaState, &*this);
-			lua_setglobal(luaState, "database");
-		}
+	public:
 		
 		/** MEM 相关接口 */
 		vector<uint64_t> readMem(const string& memName, uint64_t addr)
