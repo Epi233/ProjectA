@@ -16,7 +16,7 @@ namespace MainLogicTest
 		{
 			// xml初始化
 			XMLDocument doc;
-			doc.LoadFile("../MainLogicTest/src/ModuleTestResource/ModuleTestConfig.xml");
+			doc.LoadFile("../MainLogicTest/src/ModuleTestResource/ModuleTestConfig1.xml");
 			XMLElement* xmlRoot = doc.RootElement();
 			
 			XMLElement* xmlDataTypeDefinition = xmlRoot->FirstChildElement("DataTypeDefinition");
@@ -64,7 +64,7 @@ namespace MainLogicTest
 			vector<string> outputRightLog;
 			
 			// 主循环
-			while (clk++ <= 30)
+			while (clk++ <= 300)
 			{
 				// 构造数据放在假端口
 				if (clk % 3 == 0)

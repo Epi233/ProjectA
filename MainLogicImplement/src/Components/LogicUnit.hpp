@@ -54,7 +54,7 @@ namespace ProjectA
 	class Logic
 	{
 	public:
-		Logic(vector<WidthSpec> inPortsSpec, vector<WidthSpec> outPortsSpec)
+		Logic(vector<WidthSpec> inPortsSpec, vector<WidthSpec> outPortsSpec, uint64_t cycleCount)
 		{
 			// create each inPort according to the inPortsSpec
 			for (auto i : inPortsSpec)
@@ -72,6 +72,14 @@ namespace ProjectA
 			for (auto i : outPortsSpec)
 			{
 				scriptOutPortsSpec.emplace_back(i);
+			}
+
+			_cycleBuffer.reserve(outPortsSpec.size());  // cycleBuffer number equals to outPorts number
+
+			for (size_t i = 0; i < outPortsSpec.size(); ++i)
+			{
+				_cycleBuffer.clear();
+				_cycleBuffer.emplace_back(cycleCount, outPortsSpec[i]);
 			}
 		}
 
@@ -102,51 +110,6 @@ namespace ProjectA
 				port.run();
 		}
 
-	protected:
-		vector<Port> _inPorts;
-		vector<Port> _outPorts;
-		vector<WidthSpec> scriptOutPortsSpec;  // send outPorts widthSpec to script, due to the script output data's widthSpec must match with the widthSpec of outPorts;
-	};
-
-
-	/*
-	* -------------------------------------------------------------------------------
-	* 逻辑块的实现
-	* LogicUnitBase为所有逻辑块的基类
-	* 不同类型有不同派生，靠模板实现泛型，依次特化
-	*
-	*  -- 行 2019.11.5
-	* -------------------------------------------------------------------------------
-	*/
-
-	
-	/*
-	 * 所有类型的基类
-	 * 
-	 */
-
-	class LogicBase : public Logic
-	{
-	public:
-		LogicBase(vector<WidthSpec> inPortsSpec, vector<WidthSpec> outPortsSpec, uint64_t cycleCount)
-			: Logic(inPortsSpec, outPortsSpec)
-			//, _cycleBuffer(cycleCount, widthSpec)
-		{		
-			// create cycleBuffer for each outPort
-			_cycleBuffer.reserve(outPortsSpec.size());  // cycleBuffer number equals to outPorts number
-
-			for (size_t i = 0; i < outPortsSpec.size(); ++i)
-			{
-				_cycleBuffer.clear();
-				_cycleBuffer.emplace_back(cycleCount, outPortsSpec[i]);
-			}
-		}
-
-	public:
-
-		void run() override = 0;
-
-	protected:
 		// send script's output data to cycleBuffer's prepareArea
 		void setCycleBuffer(const vector<Data>& data)  // cycleBuffer number equals to outPorts number 
 		{
@@ -167,6 +130,9 @@ namespace ProjectA
 		}
 
 	protected:
+		vector<Port> _inPorts;
+		vector<Port> _outPorts;
+		vector<WidthSpec> scriptOutPortsSpec;  // send outPorts widthSpec to script, due to the script output data's widthSpec must match with the widthSpec of outPorts;
 		vector<CycleBuffer> _cycleBuffer;
 	};
 
@@ -177,13 +143,12 @@ namespace ProjectA
 	*
 	* 不带有任何存储组件的纯逻辑
 	*/
-	// TODO Data类型变换功能
 	template <>
-	class LogicUnit<PURE_LOGIC> : public LogicBase, public NonCopyable, public NonMovable
+	class LogicUnit<PURE_LOGIC> : public Logic, public NonCopyable, public NonMovable
 	{
 	public:
 		explicit LogicUnit(vector<WidthSpec> inPortsSpec, vector<WidthSpec> outPortsSpec, uint64_t cycleCount, function<vector<Data>(vector<Data>)> func)
-			: LogicBase(inPortsSpec, outPortsSpec, cycleCount)
+			: Logic(inPortsSpec, outPortsSpec, cycleCount)
 			, _scriptPureLogic(func)
 		{
 			for (auto& spec : inPortsSpec)
@@ -232,5 +197,6 @@ namespace ProjectA
 		vector<Data> _receiveScript;  // data get from the script
 		function<vector<Data>(vector<Data>)> _scriptPureLogic;  // parameter list{ input data }; return output data;
 	};
+	
 
 }

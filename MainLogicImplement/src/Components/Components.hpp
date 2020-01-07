@@ -43,7 +43,6 @@ namespace ProjectA
 	public:
 		Component(uint64_t size, WidthSpec widthSpec)
 			: _widthSpec(widthSpec)
-			, _sendArea(widthSpec)
 		{
 			Data temp(widthSpec);
 			for (uint64_t i = 0; i < size; i++)
@@ -62,16 +61,6 @@ namespace ProjectA
 			_memFile[addr] = data;
 		}
 
-		Data getSendArea() const
-		{
-			return _sendArea;
-		}
-
-		void setSendArea(const Data& data)
-		{
-			_sendArea = data;
-		}
-
 		WidthSpec getWidthSpec() const
 		{
 			return _widthSpec;
@@ -80,7 +69,6 @@ namespace ProjectA
 	private:
 		WidthSpec _widthSpec;
 		vector<Data> _memFile;
-		Data _sendArea;
 	};
 	
 }

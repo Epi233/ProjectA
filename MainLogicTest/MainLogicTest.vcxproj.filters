@@ -30,7 +30,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="src\ModuleTestResource\ModuleTestConfig.xml">
+    <Xml Include="src\ModuleTestResource\ModuleTestConfig1.xml">
+      <Filter>资源文件</Filter>
+    </Xml>
+    <Xml Include="src\ModuleTestResource\ModuleTestConfig2.xml">
       <Filter>资源文件</Filter>
     </Xml>
   </ItemGroup>

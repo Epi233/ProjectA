@@ -170,7 +170,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="src\ModuleTestResource\ModuleTestConfig.xml" />
+    <Xml Include="src\ModuleTestResource\ModuleTestConfig1.xml" />
+    <Xml Include="src\ModuleTestResource\ModuleTestConfig2.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
