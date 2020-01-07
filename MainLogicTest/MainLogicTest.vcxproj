@@ -158,12 +158,11 @@
   <ItemGroup>
     <ClCompile Include="src\CycleBufferTest.cpp" />
     <ClCompile Include="src\DataTest.cpp" />
+    <ClCompile Include="src\LogicUnitTest.cpp" />
     <ClCompile Include="src\ModuleTest.cpp" />
-    <ClCompile Include="src\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Assist.h" />
-    <ClInclude Include="src\tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MainLogicImplement\MainLogicImplement.vcxproj">
@@ -171,13 +170,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="src\ModuleTestResource\ModuleTestConfig.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\ModuleTestResource\inBuffer1.lua" />
-    <None Include="src\ModuleTestResource\inBuffer2.lua" />
-    <None Include="src\ModuleTestResource\inBuffer3.lua" />
-    <None Include="src\ModuleTestResource\inBuffer4.lua" />
+    <Xml Include="src\ModuleTestResource\ModuleTestConfig1.xml" />
+    <Xml Include="src\ModuleTestResource\ModuleTestConfig2.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

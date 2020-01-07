@@ -57,7 +57,7 @@ namespace ProjectA
 		{
 			if (_isTargetSet)
 			{
-				_target->setData(_data);
+				_target->setData(_data);   //Send current port's data to the target port
 			}
 		}
 

@@ -5,14 +5,14 @@ namespace ProjectA
 {
 	enum class ComponentType : char
 	{
-		empty,
+		pureLogic,
 		fifo,
 		stack,
 		memoryFile
 		
 	};
 
-#define EMPTY ComponentType::empty
+#define PURE_LOGIC ComponentType::pureLogic
 #define FIFO ComponentType::fifo
 #define STACK ComponentType::stack
 #define MEM ComponentType::memoryFile

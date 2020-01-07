@@ -48,6 +48,8 @@ namespace ProjectA
 		};
 		
 	public:
+		CycleBuffer() = default;
+
 		explicit CycleBuffer(uint64_t cycle, const WidthSpec& spec)
 			: _cycleNum(cycle)
 			, _widthSpec(spec)

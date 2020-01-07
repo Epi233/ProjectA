@@ -24,19 +24,21 @@ namespace ProjectA
 	class Data
 	{
 	public:
+		Data() = delete;
+		
 		explicit Data(const WidthSpec& spec)
 			: _dataCells(vector<DataCell>{})
 		{
 			for (auto size : spec)
-				_dataCells.emplace_back(size);
+				_dataCells.emplace_back(size);   //Construct a new "Datacell" with parameter "size"
 		}
 
 		Data(const WidthSpec& spec, const vector<int64_t>& value)
 			: _dataCells(vector<DataCell>{})
 		{
-			DEBUG_ASSERT(spec.size() == value.size());
+			DEBUG_ASSERT(spec.size() == value.size());  //Whether the number of DataCells is equal
 			for (size_t i = 0; i < spec.size(); ++i)
-				_dataCells.emplace_back(spec[i], value[i]);
+				_dataCells.emplace_back(spec[i], value[i]); //Construct a new "Datacell" with parameter "size" and "value"
 		}
 
 		Data(const Data& rhs) = default;

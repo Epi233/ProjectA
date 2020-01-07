@@ -22,6 +22,7 @@
 
 namespace ProjectA
 {
+	
 	class Database
 	{
 	public:
@@ -40,18 +41,7 @@ namespace ProjectA
 			_memDatabase[memName] = ptr;
 		}
 
-	public: // Lua接口
-		void luaLoadDatabaseFunctions(lua_State* luaState)
-		{
-			luabridge::getGlobalNamespace(luaState)
-				.beginClass<Database>("Database")
-				.addFunction("readMem", &Database::readMem)
-				.addFunction("writeMem", &Database::writeMem)
-				.endClass();
-
-			luabridge::push(luaState, &*this);
-			lua_setglobal(luaState, "database");
-		}
+	public:
 		
 		/** MEM 相关接口 */
 		vector<uint64_t> readMem(const string& memName, uint64_t addr)

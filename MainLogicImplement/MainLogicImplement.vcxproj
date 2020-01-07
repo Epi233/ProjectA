@@ -133,7 +133,7 @@
     <ClInclude Include="src\Components\ComponentInterface.hpp" />
     <ClInclude Include="src\Components\Components.hpp" />
     <ClInclude Include="src\Components\CycleBuffer.hpp" />
-    <ClInclude Include="src\Components\Database.hpp" />
+    <ClInclude Include="src\Components\DataBase.hpp" />
     <ClInclude Include="src\Components\DataCell.hpp" />
     <ClInclude Include="src\Components\DataTypeRepo.hpp" />
     <ClInclude Include="src\Components\LogicUnit.hpp" />
@@ -141,6 +141,7 @@
     <ClInclude Include="src\Components\Module.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />
     <ClInclude Include="src\Define\Define.hpp" />
+    <ClInclude Include="src\UserFunctions\UserFunctions.hpp" />
     <ClInclude Include="src\Util\Any.hpp" />
     <ClInclude Include="src\Util\Exception.hpp" />
     <ClInclude Include="src\Util\FunctionTraits.hpp" />

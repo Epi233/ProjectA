@@ -8,8 +8,9 @@
 #pragma once
 
 #include "LogicUnit.hpp"
-#include "Database.hpp"
+#include "DataBase.hpp"
 #include "Port.hpp"
+#include "../UserFunctions/UserFunctions.hpp"
 #include "tinyxml2.h"
 
 using namespace tinyxml2;
@@ -54,29 +55,27 @@ namespace ProjectA
 		
 #pragma region 创建LogicUnit
 	private:
-		void createLogicUnitEmpty(const string& unitName, const string& luaAddr, WidthSpec widthSpec)
+		void createLogicUnitPureLogic(const string& unitName, const vector<WidthSpec>& inPortsSpec, const vector<WidthSpec>& outPortsSpec, uint64_t cycleCount, const string& funName)
 		{
 			// 创建EMPTY逻辑组件
-			LogicUnit<EMPTY>* ptr = new LogicUnit<EMPTY>(luaAddr);
-			// 逻辑组件加载Database函数
-			_database.luaLoadDatabaseFunctions(ptr->getLuaStatePtr());
+			LogicUnit<PURE_LOGIC>* ptr = new LogicUnit<PURE_LOGIC>(inPortsSpec, outPortsSpec, cycleCount, _userFunctions[funName]);
 			// 向基类转换
 			Logic* base_ptr = dynamic_cast<Logic*>(ptr);
 			_logicUnits[unitName] = base_ptr;
 		}
 		
-		void createLogicUnitMem(const string& memName, const string& luaAddr, size_t memSize, WidthSpec widthSpec, uint64_t cycleCount)
-		{
-			// 创建MEM逻辑组件
-			LogicUnit<MEM>* ptr = new LogicUnit<MEM>(luaAddr, widthSpec, memSize, cycleCount);
-			// Database更新新组件
-			_database.insertComponentMem(memName, ptr->getPtr());
-			// 逻辑组件加载Database函数
-			_database.luaLoadDatabaseFunctions(ptr->getLuaStatePtr());
-			// 向基类转换
-			Logic* base_ptr = dynamic_cast<Logic*>(ptr);
-			_logicUnits[memName] = base_ptr;
-		}
+		//void createLogicUnitMem(const string& memName, const string& luaAddr, size_t memSize, WidthSpec widthSpec, uint64_t cycleCount)
+		//{
+		//	// 创建MEM逻辑组件
+		//	LogicUnit<MEM>* ptr = new LogicUnit<MEM>(luaAddr, widthSpec, memSize, cycleCount);
+		//	// Database更新新组件
+		//	_database.insertComponentMem(memName, ptr->getPtr());
+		//	// 逻辑组件加载Database函数
+		//	_database.luaLoadDatabaseFunctions(ptr->getLuaStatePtr());
+		//	// 向基类转换
+		//	Logic* base_ptr = dynamic_cast<Logic*>(ptr);
+		//	_logicUnits[memName] = base_ptr;
+		//}
 #pragma endregion 
 
 #pragma region  xml读取与成员构造
@@ -120,22 +119,42 @@ namespace ProjectA
 		void xmlLogicRead(XMLElement* xmlLogicUnit)
 		{
 			string componentType = xmlLogicUnit->FindAttribute("type")->Value();
-			if (componentType == "MEM")
-				xmlLogicReadMem(xmlLogicUnit);
+			//if (componentType == "MEM")
+				//xmlLogicReadMem(xmlLogicUnit);
+			if (componentType == "PURE_LOGIC")
+			{
+				xmlLogicReadPureLogic(xmlLogicUnit);
+			}
 			// TODO 添加其他类型
 		}
 
-		void xmlLogicReadMem(XMLElement* xmlLogicUnit)
+		void xmlLogicReadPureLogic(XMLElement* xmlLogicUnit)
 		{
 			string name = xmlLogicUnit->FindAttribute("name")->Value();
-			string scriptAddr = xmlLogicUnit->FindAttribute("scriptName")->Value();
+			vector<WidthSpec> inPortsSpec;
+			vector<WidthSpec> outPortsSpec;
+
+			XMLElement* inputSpecXML = xmlLogicUnit->FirstChildElement("InputSpec");
+			while (inputSpecXML)
+			{
+				inPortsSpec.push_back(_dataTypeRepo->getWidthSpec(inputSpecXML->FindAttribute("specName")->Value()));
+
+				inputSpecXML = inputSpecXML->NextSiblingElement("InputSpec");
+			}
+
+			XMLElement* outputSpecXML = xmlLogicUnit->FirstChildElement("OutputSpec");
+			while (outputSpecXML)
+			{
+				outPortsSpec.push_back(_dataTypeRepo->getWidthSpec(outputSpecXML->FindAttribute("specName")->Value()));
+
+				outputSpecXML = outputSpecXML->NextSiblingElement("OutputSpec");
+			}
 			
 			XMLElement* xmlParameters = xmlLogicUnit->FirstChildElement("Parameter");
-			uint64_t size = std::stoi(xmlParameters->FindAttribute("size")->Value());
-			const WidthSpec& widthSpec = _dataTypeRepo->getWidthSpec(xmlParameters->FindAttribute("specName")->Value());
-			uint64_t cycleCounter = std::stoi(xmlParameters->FindAttribute("cycleCounter")->Value());
+			uint64_t cycleCount = std::stoi(xmlParameters->FindAttribute("cycleCounter")->Value());
+			string funName = xmlParameters->FindAttribute("funName")->Value();
 
-			createLogicUnitMem(name, scriptAddr, size, widthSpec, cycleCounter);
+			createLogicUnitPureLogic(name, inPortsSpec, outPortsSpec, cycleCount, funName);
 		}
 
 		void xmlBuildConnection(XMLElement* xmlConnection)
@@ -152,7 +171,7 @@ namespace ProjectA
 				xmlInPortOut = xmlInPortOut->NextSiblingElement("InPortOut");
 			}
 			// 自由连接建立
-			XMLElement* xmlFreeConnection = xmlConnection->FirstChildElement("FreeConnection");
+			XMLElement* xmlFreeConnection = xmlConnection->FirstChildElement("BuildConnection");
 			while (xmlFreeConnection)
 			{
 				string sourceName = xmlFreeConnection->FindAttribute("sourceName")->Value();
@@ -160,13 +179,23 @@ namespace ProjectA
 				string targetName = xmlFreeConnection->FindAttribute("targetName")->Value();
 				uint64_t targetInPortIndex = std::stoi(xmlFreeConnection->FindAttribute("targetInPortIndex")->Value());
 
-				// 保留字__OUTPORT__用来设置输出
-				if (targetName == "__OUTPORT__")
-					_logicUnits[sourceName]->getOutPortPtr(sourceOutPortIndex)->setTargetPort(&_outPorts[targetInPortIndex]);
+				// 保留字__INPORT__用来设置输入 保留字__OUTPORT__用来设置输出
+				if (sourceName == "__INPORT__")
+				{
+					if (targetName == "__OUTPORT__")
+						_inPorts[sourceOutPortIndex].setTargetPort(&_outPorts[targetInPortIndex]);
+					else
+						_inPorts[sourceOutPortIndex].setTargetPort(_logicUnits[targetName]->getInPortPtr(targetInPortIndex));
+				}
 				else
-					_logicUnits[sourceName]->getOutPortPtr(sourceOutPortIndex)->setTargetPort(_logicUnits[targetName]->getInPortPtr(targetInPortIndex));
-				
-				xmlFreeConnection = xmlFreeConnection->NextSiblingElement("FreeConnection");
+				{
+					if (targetName == "__OUTPORT__")
+						_logicUnits[sourceName]->getOutPortPtr(sourceOutPortIndex)->setTargetPort(&_outPorts[targetInPortIndex]);
+					else
+						_logicUnits[sourceName]->getOutPortPtr(sourceOutPortIndex)->setTargetPort(_logicUnits[targetName]->getInPortPtr(targetInPortIndex));
+				}
+
+				xmlFreeConnection = xmlFreeConnection->NextSiblingElement("BuildConnection");
 			}
 		}
 		
@@ -176,6 +205,7 @@ namespace ProjectA
 		string _moduleName;
 
 		unordered_map<string, Logic*> _logicUnits;
+		UserFunctions _userFunctions;
 		Database _database;
 
 		vector<Port> _inPorts;
