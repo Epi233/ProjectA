@@ -12,12 +12,7 @@
 #include "../Util/Util.hpp"
 #include "../Util/Exception.hpp"
 #include "Data.hpp"
-#include "Port.hpp"
-#include "LogicUnit.hpp"
 #include "Components.hpp"
-#include "LuaBridge.h"
-#include "Vector.h"
-#include "Data.hpp"
 #include "DataTypeRepo.hpp"
 
 namespace ProjectA
@@ -30,34 +25,30 @@ namespace ProjectA
 		
 		~Database()
 		{
-			// 所有指针由LogicUnit申请，由LogicUnit释放
-			// 这里不需要做任何事情
+			for (auto p : _fifoDatabase)
+				delete p.second;
+			for (auto p : _stackDatabase)
+				delete p.second;
+			for (auto p : _memDatabase)
+				delete p.second;
 		}
 		
 	public:
 		// Mem 相关接口
-		void insertComponentMem(const string& memName, Component<MEM>* ptr)
+		void addComponentMem(const string& memName, uint64_t size, WidthSpec widthSpec)
 		{
+			Component<MEM>* ptr = new Component<MEM>{ size, widthSpec };
 			_memDatabase[memName] = ptr;
 		}
-
-	public:
 		
-		/** MEM 相关接口 */
-		vector<uint64_t> readMem(const string& memName, uint64_t addr)
+		Data readMem(const string& memName, uint64_t addr)
 		{
-			const Data& data =  _memDatabase[memName]->readFile(addr);
-			vector<uint64_t> result;
-			for (auto& i : data.getDataCells())
-				result.push_back(i.getData<uint64_t>());
-			return result;
+			return _memDatabase[memName]->readFile(addr);
 		}
 
-		void writeMem(const string& memName, uint64_t addr, const vector<int64_t>& data)
+		void writeMem(const string& memName, uint64_t addr, const Data& data)
 		{
-			Data temp(_memDatabase[memName]->getWidthSpec());
-			temp.setValue(data);
-			_memDatabase[memName]->writeFile(addr, temp);
+			_memDatabase[memName]->writeFile(addr, data);
 		}
 
 

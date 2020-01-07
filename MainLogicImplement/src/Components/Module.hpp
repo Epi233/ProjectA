@@ -57,25 +57,9 @@ namespace ProjectA
 	private:
 		void createLogicUnitPureLogic(const string& unitName, const vector<WidthSpec>& inPortsSpec, const vector<WidthSpec>& outPortsSpec, uint64_t cycleCount, const string& funName)
 		{
-			// 创建EMPTY逻辑组件
-			LogicUnit<PURE_LOGIC>* ptr = new LogicUnit<PURE_LOGIC>(inPortsSpec, outPortsSpec, cycleCount, _userFunctions[funName]);
-			// 向基类转换
-			Logic* base_ptr = dynamic_cast<Logic*>(ptr);
-			_logicUnits[unitName] = base_ptr;
+			_logicUnits[unitName] = new Logic(inPortsSpec, outPortsSpec, &_database, cycleCount, _userFunctions[funName]);
 		}
 		
-		//void createLogicUnitMem(const string& memName, const string& luaAddr, size_t memSize, WidthSpec widthSpec, uint64_t cycleCount)
-		//{
-		//	// 创建MEM逻辑组件
-		//	LogicUnit<MEM>* ptr = new LogicUnit<MEM>(luaAddr, widthSpec, memSize, cycleCount);
-		//	// Database更新新组件
-		//	_database.insertComponentMem(memName, ptr->getPtr());
-		//	// 逻辑组件加载Database函数
-		//	_database.luaLoadDatabaseFunctions(ptr->getLuaStatePtr());
-		//	// 向基类转换
-		//	Logic* base_ptr = dynamic_cast<Logic*>(ptr);
-		//	_logicUnits[memName] = base_ptr;
-		//}
 #pragma endregion 
 
 #pragma region  xml读取与成员构造
@@ -102,13 +86,21 @@ namespace ProjectA
 
 				xmlOutPort = xmlOutPort->NextSiblingElement("OutPort");
 			}
+			// component
+			XMLElement* xmlComponentUnit = xmlModule->FirstChildElement("Component");
+			while (xmlComponentUnit)
+			{
+				xmlComponentRead(xmlComponentUnit);
+
+				xmlComponentUnit = xmlComponentUnit->NextSiblingElement("Component");
+			}
 			// logic unit
-			XMLElement* xmlLogicUnit = xmlModule->FirstChildElement("LogicUnit");
+			XMLElement* xmlLogicUnit = xmlModule->FirstChildElement("Logic");
 			while (xmlLogicUnit)
 			{
 				xmlLogicRead(xmlLogicUnit);
 				
-				xmlLogicUnit = xmlLogicUnit->NextSiblingElement("LogicUnit");
+				xmlLogicUnit = xmlLogicUnit->NextSiblingElement("Logic");
 			}
 			// 建立连接关系
 			XMLElement* xmlConnection = xmlModule->FirstChildElement("Connection");
@@ -116,19 +108,21 @@ namespace ProjectA
 		}
 
 	private:
-		void xmlLogicRead(XMLElement* xmlLogicUnit)
-		{
-			string componentType = xmlLogicUnit->FindAttribute("type")->Value();
-			//if (componentType == "MEM")
-				//xmlLogicReadMem(xmlLogicUnit);
-			if (componentType == "PURE_LOGIC")
-			{
-				xmlLogicReadPureLogic(xmlLogicUnit);
-			}
-			// TODO 添加其他类型
-		}
 
-		void xmlLogicReadPureLogic(XMLElement* xmlLogicUnit)
+		void xmlComponentRead(XMLElement* xmlComponentUnit)
+		{
+			string componentName = xmlComponentUnit->FindAttribute("name")->Value();
+			string type = xmlComponentUnit->FindAttribute("type")->Value();
+			if (type == "MEM")
+			{
+				XMLElement* xmlParameter = xmlComponentUnit->FirstChildElement("Parameter");
+				WidthSpec widthSpec = _dataTypeRepo->getWidthSpec(xmlParameter->FindAttribute("specName")->Value());
+				uint64_t size = std::stoi(xmlParameter->FindAttribute("size")->Value());
+				_database.addComponentMem(componentName, size, widthSpec);
+			}
+		}
+		
+		void xmlLogicRead(XMLElement* xmlLogicUnit)
 		{
 			string name = xmlLogicUnit->FindAttribute("name")->Value();
 			vector<WidthSpec> inPortsSpec;
@@ -149,7 +143,7 @@ namespace ProjectA
 
 				outputSpecXML = outputSpecXML->NextSiblingElement("OutputSpec");
 			}
-			
+
 			XMLElement* xmlParameters = xmlLogicUnit->FirstChildElement("Parameter");
 			uint64_t cycleCount = std::stoi(xmlParameters->FindAttribute("cycleCounter")->Value());
 			string funName = xmlParameters->FindAttribute("funName")->Value();

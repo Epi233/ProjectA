@@ -13,29 +13,33 @@
         <OutPort specName="32d1v"/>
         <OutPort specName="32d1v"/>
 
-        <LogicUnit name="inBuffer1" type="PURE_LOGIC">
-            <InputSpec specName="32d1v"/>
-            <OutputSpec specName="32d1v"/>
-            <Parameter funName="TestFun" cycleCounter="1"/>
-        </LogicUnit>
+        <Component name="mem1" type="MEM">
+            <Parameter specName="32d1v" size="128"/>
+        </Component>
 
-        <LogicUnit name="inBuffer2" type="PURE_LOGIC">
+        <Logic name="inBuffer1">
             <InputSpec specName="32d1v"/>
             <OutputSpec specName="32d1v"/>
-            <Parameter funName="TestFun" cycleCounter="1"/>
-        </LogicUnit>
+            <Parameter funName="TestFun1" cycleCounter="1"/>
+        </Logic>
 
-        <LogicUnit name="inBuffer3" type="PURE_LOGIC">
+        <Logic name="inBuffer2">
             <InputSpec specName="32d1v"/>
             <OutputSpec specName="32d1v"/>
-            <Parameter funName="TestFun" cycleCounter="1"/>
-        </LogicUnit>
+            <Parameter funName="TestFun1" cycleCounter="1"/>
+        </Logic>
 
-        <LogicUnit name="inBuffer4" type="PURE_LOGIC">
+        <Logic name="inBuffer3">
             <InputSpec specName="32d1v"/>
             <OutputSpec specName="32d1v"/>
-            <Parameter funName="TestFun" cycleCounter="1"/>
-        </LogicUnit>
+            <Parameter funName="TestFun1" cycleCounter="1"/>
+        </Logic>
+
+        <Logic name="inBuffer4">
+            <InputSpec specName="32d1v"/>
+            <OutputSpec specName="32d1v"/>
+            <Parameter funName="TestFun1" cycleCounter="1"/>
+        </Logic>
 
         <Connection>
             <BuildConnection sourceName="__INPORT__" sourceOutPortIndex="0" targetName="inBuffer1" targetInPortIndex="0"/>

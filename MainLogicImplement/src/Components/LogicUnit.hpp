@@ -25,36 +25,26 @@ Development Log:
 
 #pragma once
 
-#include "Data.hpp"
-#include "Port.hpp"
-#include "Components.hpp"
+#include "DataBase.hpp"
 #include "CycleBuffer.hpp"
 
-#include "lua.hpp"
-#include "LuaBridge.h"
-#include "Vector.h"
 #include "../Util/Util.hpp"
 
 
 namespace ProjectA
 {
-	// -------------------------------------------------------------------------------
-	/*
-	 * 实现模板特化用的
-	 * 不做实现
-	 */
-	template <ComponentType Type>
-	class LogicUnit;
-
-	// -------------------------------------------------------------------------------
-	/*
-	 * Logic
-	 * 所有LogicUnit的基类
-	 */
+	using ScriptFunction = function<vector<Data>(vector<Data>, Database*)>;
+	
 	class Logic
 	{
 	public:
-		Logic(vector<WidthSpec> inPortsSpec, vector<WidthSpec> outPortsSpec, uint64_t cycleCount)
+		Logic(vector<WidthSpec> inPortsSpec
+			, vector<WidthSpec> outPortsSpec
+			, Database* databasePtr
+			, uint64_t cycleCount
+			, ScriptFunction func)
+			: _dataBasePtr(databasePtr)
+			, _scriptPureLogic(func)
 		{
 			// create each inPort according to the inPortsSpec
 			for (auto i : inPortsSpec)
@@ -68,23 +58,49 @@ namespace ProjectA
 				_outPorts.emplace_back(i);
 			}
 
-			// create outPorts widthSpec for script
-			for (auto i : outPortsSpec)
-			{
-				scriptOutPortsSpec.emplace_back(i);
-			}
-
 			_cycleBuffer.reserve(outPortsSpec.size());  // cycleBuffer number equals to outPorts number
-
 			for (size_t i = 0; i < outPortsSpec.size(); ++i)
 			{
 				_cycleBuffer.clear();
 				_cycleBuffer.emplace_back(cycleCount, outPortsSpec[i]);
 			}
+			
 		}
 
+		void run()
+		{
+			runInPorts();
 
-		virtual void run() = 0;   //Pure virtual function; Can't be instantiated, only be inherited.
+			// 准备脚本输入数据
+			vector<Data> sendScript;  // data send to the script
+			vector<Data> receiveScript;  // data get from the script
+			for (auto& port : _inPorts)
+				sendScript.emplace_back(port.getWidthSpec());
+			for (auto& port : _outPorts)
+				receiveScript.emplace_back(port.getWidthSpec());
+			
+			for (size_t i = 0; i < _inPorts.size(); ++i)
+			{
+				sendScript[i] = _inPorts[i].getData();
+			}
+			
+			// 执行脚本
+			receiveScript = _scriptPureLogic(sendScript, _dataBasePtr);
+			
+			// 将脚本输出数据发送到cycleBuffer的准备区
+			setCycleBuffer(receiveScript);
+			
+			// 运行一下cycleBuffer，之后需要根据CLK自动run;
+			for (auto& i : _cycleBuffer)
+			{
+				i.run();
+			}
+
+			// 将cycleBuffer的发送区数据发送到相应的outPort
+			setOutPorts();
+
+			runOutPorts();
+		}
 
 		Port* getInPortPtr(uint64_t index)
 		{
@@ -132,71 +148,9 @@ namespace ProjectA
 	protected:
 		vector<Port> _inPorts;
 		vector<Port> _outPorts;
-		vector<WidthSpec> scriptOutPortsSpec;  // send outPorts widthSpec to script, due to the script output data's widthSpec must match with the widthSpec of outPorts;
+		Database* _dataBasePtr;
 		vector<CycleBuffer> _cycleBuffer;
+		ScriptFunction _scriptPureLogic;  // parameter list{ input data }; return output data;
 	};
-
-
-	// -------------------------------------------------------------------------------
-	/*
-	* PURE_LOGIC类型的LogicUnit
-	*
-	* 不带有任何存储组件的纯逻辑
-	*/
-	template <>
-	class LogicUnit<PURE_LOGIC> : public Logic, public NonCopyable, public NonMovable
-	{
-	public:
-		explicit LogicUnit(vector<WidthSpec> inPortsSpec, vector<WidthSpec> outPortsSpec, uint64_t cycleCount, function<vector<Data>(vector<Data>)> func)
-			: Logic(inPortsSpec, outPortsSpec, cycleCount)
-			, _scriptPureLogic(func)
-		{
-			for (auto& spec : inPortsSpec)
-				_sendScript.emplace_back(spec);
-
-			for (auto& spec : outPortsSpec)
-				_receiveScript.emplace_back(spec);
-		}
-
-	public:
-		void run() override
-		{
-			runInPorts();
-
-			// 准备脚本输入数据
-			setScriptInput();
-			// 执行脚本
-			_receiveScript = _scriptPureLogic(_sendScript);
-			// 将脚本输出数据发送到cycleBuffer的准备区
-			setCycleBuffer(_receiveScript);
-			// 运行一下cycleBuffer，之后需要根据CLK自动run;
-			for (auto &i : _cycleBuffer)
-			{
-				i.run();
-			}
-
-			// 将cycleBuffer的发送区数据发送到相应的outPort
-			setOutPorts();
-
-			runOutPorts();
-		}
-
-
-	protected:
-		void setScriptInput()   // send inPorts data to script
-		{
-			DEBUG_ASSERT(_sendScript.size() == _inPorts.size());  // sendScript size must match with inPorts number
-			for (size_t i = 0; i < _inPorts.size(); ++i)
-			{
-				_sendScript[i] = _inPorts[i].getData();
-			}
-		}
-
-	private:
-		vector<Data> _sendScript;  // data send to the script
-		vector<Data> _receiveScript;  // data get from the script
-		function<vector<Data>(vector<Data>)> _scriptPureLogic;  // parameter list{ input data }; return output data;
-	};
-	
 
 }

@@ -16,7 +16,7 @@ namespace MainLogicTest
 		TEST_METHOD(pureLogicTest)
 		{
 			// User Functions
-			auto testFun = [](vector<Data> input) -> vector<Data>
+			auto testFun = [](vector<Data> input, Database* databasePtr) -> vector<Data>
 			{
 				vector<int64_t> num1 = input[0].getDataCells<int64_t>();
 				vector<int64_t> num2 = input[1].getDataCells<int64_t>();
@@ -30,7 +30,7 @@ namespace MainLogicTest
 			// test LogicUnit<EMPTY>
 			vector<WidthSpec> inPortsSpec{ WidthSpec{ 32 }, WidthSpec{ 32 } };
 			vector<WidthSpec> outPortsSpec{ WidthSpec{ 32 } };
-			LogicUnit<PURE_LOGIC> pureLogicTest(inPortsSpec, outPortsSpec, uint64_t(0), testFun);
+			Logic pureLogicTest(inPortsSpec, outPortsSpec, nullptr, uint64_t(0), testFun);
 
 			// make fake ports to send/load data to/from the real ports
 			Port input1(WidthSpec{ 32 });
