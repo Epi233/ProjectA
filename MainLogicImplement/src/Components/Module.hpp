@@ -17,7 +17,6 @@ using namespace tinyxml2;
 
 namespace ProjectA
 {
-	// TODO 多输入输出口 Port连接 内部Port连接 
 	class Module
 	{
 	public:
@@ -113,6 +112,12 @@ namespace ProjectA
 		{
 			string componentName = xmlComponentUnit->FindAttribute("name")->Value();
 			string type = xmlComponentUnit->FindAttribute("type")->Value();
+			if (type == "REG")
+			{
+				XMLElement* xmlParameter = xmlComponentUnit->FirstChildElement("Parameter");
+				WidthSpec widthSpec = _dataTypeRepo->getWidthSpec(xmlParameter->FindAttribute("specName")->Value());
+				_database.addComponentReg(componentName, widthSpec);
+			}
 			if (type == "MEM")
 			{
 				XMLElement* xmlParameter = xmlComponentUnit->FirstChildElement("Parameter");

@@ -2,29 +2,67 @@
 
 #include "Data.hpp"
 #include "Port.hpp"
-#include "ComponentInterface.hpp"
 
 namespace ProjectA
 {
 
-	template<>
-	class Component<FIFO> : public ComponentInterface
+	enum class ComponentType : char
 	{
-	public:
-
-
-	private:
+		reg,
+		fifo,
+		stack,
+		memoryFile
 
 	};
 
-	template<>
-	class Component<STACK> : public ComponentInterface
+#define REG ComponentType::reg
+#define FIFO ComponentType::fifo
+#define STACK ComponentType::stack
+#define MEM ComponentType::memoryFile
+
+	Interface ComponentInterface
 	{
 	public:
+		virtual  ~ComponentInterface() = default;
+	};
 
+	template<ComponentType Type>
+	class Component : public ComponentInterface
+	{
+	};
+
+	/*
+	 * REG组件
+	 * 单个寄存器
+	 */
+	template<>
+	class Component<REG> : public ComponentInterface
+	{
+	public:
+		explicit Component(WidthSpec widthSpec)
+			: _widthSpec(widthSpec)
+			, _reg(widthSpec)
+		{
+		}
+
+		const Data& readReg() const
+		{
+			return _reg;
+		}
+
+		void writeReg(const Data& data)
+		{
+			_reg = data;
+		}
+
+		WidthSpec getWidthSpec() const
+		{
+			return _widthSpec;
+		}
 
 	private:
-
+		WidthSpec _widthSpec;
+		Data _reg;
 	};
 
 	/*
@@ -69,6 +107,26 @@ namespace ProjectA
 	private:
 		WidthSpec _widthSpec;
 		vector<Data> _memFile;
+	};
+
+	template<>
+	class Component<FIFO> : public ComponentInterface
+	{
+	public:
+
+
+	private:
+
+	};
+
+	template<>
+	class Component<STACK> : public ComponentInterface
+	{
+	public:
+
+
+	private:
+
 	};
 	
 }

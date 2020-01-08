@@ -16,6 +16,10 @@
             <Parameter specName="32d" size="128"/>
         </Component>
 
+        <Component name="reg1" type="REG">
+            <Parameter specName="32d"/>
+        </Component>
+
         <Logic name="inBuffer1">
             <InputSpec specName="32d"/>
             <InputSpec specName="32d"/>

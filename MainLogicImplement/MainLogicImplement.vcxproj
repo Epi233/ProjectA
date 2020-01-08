@@ -130,7 +130,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Components\ComponentInterface.hpp" />
     <ClInclude Include="src\Components\Components.hpp" />
     <ClInclude Include="src\Components\CycleBuffer.hpp" />
     <ClInclude Include="src\Components\DataBase.hpp" />

@@ -1,7 +1,7 @@
 #include "CppUnitTest.h"
 
 #include "Components/LogicUnit.hpp"
-#include "Components/ComponentInterface.hpp"
+#include "Components/Components.hpp"
 #include "UserFunctions/UserFunctions.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

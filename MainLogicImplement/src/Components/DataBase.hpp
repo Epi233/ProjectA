@@ -34,6 +34,23 @@ namespace ProjectA
 		}
 		
 	public:
+		// Reg 相关接口
+		void addComponentReg(const string& memName, WidthSpec widthSpec)
+		{
+			Component<REG>* ptr = new Component<REG>{ widthSpec };
+			_regDatabase[memName] = ptr;
+		}
+
+		Data readReg(const string& memName)
+		{
+			return _regDatabase[memName]->readReg();
+		}
+
+		void writeReg(const string& memName, const Data& data)
+		{
+			_regDatabase[memName]->writeReg(data);
+		}
+		
 		// Mem 相关接口
 		void addComponentMem(const string& memName, uint64_t size, WidthSpec widthSpec)
 		{
@@ -53,9 +70,12 @@ namespace ProjectA
 
 
 	private:
+		unordered_map<string, Component<REG>*> _regDatabase;
+		unordered_map<string, Component<MEM>*> _memDatabase;
 		unordered_map<string, Component<FIFO>*> _fifoDatabase;
 		unordered_map<string, Component<STACK>*> _stackDatabase;
-		unordered_map<string, Component<MEM>*> _memDatabase;
+		
+		
 	};
 	
 }
