@@ -9,6 +9,9 @@
  *
  *  -- 行 2020.1.8
  */
+
+//TODO Module的不能复制的问题->原因在于Port的指针部分
+
 #pragma once
 
 #include "LogicUnit.hpp"
@@ -31,6 +34,8 @@ namespace ProjectA
 		
 		~Module()
 		{
+			for (auto& i : _logicUnits)
+				delete i.second;
 		}
 
 	public:
@@ -39,7 +44,7 @@ namespace ProjectA
 			for (auto& port : _inPorts)
 				port.run();
 			for (auto ptr : _logicUnits)
-				ptr.second.run();
+				ptr.second->run();
 			for (auto& port : _outPorts)
 				port.run();
 		}
@@ -58,7 +63,7 @@ namespace ProjectA
 	private:
 		void createLogicUnitPureLogic(const string& unitName, const vector<WidthSpec>& inPortsSpec, const vector<WidthSpec>& outPortsSpec, uint64_t cycleCount, const string& funName)
 		{
-			_logicUnits[unitName] = Logic(inPortsSpec, outPortsSpec, &_database, cycleCount, _userFunctions[funName]);
+			_logicUnits[unitName] = new Logic(inPortsSpec, outPortsSpec, &_database, cycleCount, _userFunctions[funName]);
 		}
 		
 #pragma endregion 
@@ -167,7 +172,7 @@ namespace ProjectA
 				uint64_t index = std::stoi(xmlInPortOut->FindAttribute("index")->Value());
 				string targetName = xmlInPortOut->FindAttribute("targetName")->Value();
 				uint64_t targetInPortIndex = std::stoi(xmlInPortOut->FindAttribute("targetInPortIndex")->Value());
-				_inPorts[index].setTargetPort(_logicUnits[targetName].getInPortPtr(targetInPortIndex));
+				_inPorts[index].setTargetPort(_logicUnits[targetName]->getInPortPtr(targetInPortIndex));
 
 				xmlInPortOut = xmlInPortOut->NextSiblingElement("InPortOut");
 			}
@@ -186,14 +191,14 @@ namespace ProjectA
 					if (targetName == "__OUTPORT__")
 						_inPorts[sourceOutPortIndex].setTargetPort(&_outPorts[targetInPortIndex]);
 					else
-						_inPorts[sourceOutPortIndex].setTargetPort(_logicUnits[targetName].getInPortPtr(targetInPortIndex));
+						_inPorts[sourceOutPortIndex].setTargetPort(_logicUnits[targetName]->getInPortPtr(targetInPortIndex));
 				}
 				else
 				{
 					if (targetName == "__OUTPORT__")
-						_logicUnits[sourceName].getOutPortPtr(sourceOutPortIndex)->setTargetPort(&_outPorts[targetInPortIndex]);
+						_logicUnits[sourceName]->getOutPortPtr(sourceOutPortIndex)->setTargetPort(&_outPorts[targetInPortIndex]);
 					else
-						_logicUnits[sourceName].getOutPortPtr(sourceOutPortIndex)->setTargetPort(_logicUnits[targetName].getInPortPtr(targetInPortIndex));
+						_logicUnits[sourceName]->getOutPortPtr(sourceOutPortIndex)->setTargetPort(_logicUnits[targetName]->getInPortPtr(targetInPortIndex));
 				}
 
 				xmlFreeConnection = xmlFreeConnection->NextSiblingElement("BuildConnection");
@@ -205,7 +210,7 @@ namespace ProjectA
 	private:
 		string _moduleName;
 
-		unordered_map<string, Logic> _logicUnits;
+		unordered_map<string, Logic*> _logicUnits;
 		UserFunctions _userFunctions;
 		Database _database;
 

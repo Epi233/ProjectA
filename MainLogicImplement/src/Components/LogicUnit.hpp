@@ -38,7 +38,7 @@ namespace ProjectA
 	class Logic
 	{
 	public:
-		Logic() = default;
+		Logic() = delete;
 		
 		Logic(vector<WidthSpec> inPortsSpec
 			, vector<WidthSpec> outPortsSpec
