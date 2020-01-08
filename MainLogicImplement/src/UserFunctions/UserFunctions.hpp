@@ -16,6 +16,7 @@ namespace ProjectA
 			{
 				return input;
 			};
+			
 			// module≤‚ ‘2”√£¨±∂Ø
 			_functionSet["TestFun2"] = [](vector<Data> input, Database* databasePtr) -> vector<Data>
 			{

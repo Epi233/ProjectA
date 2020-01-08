@@ -38,6 +38,8 @@ namespace ProjectA
 	class Logic
 	{
 	public:
+		Logic() = default;
+		
 		Logic(vector<WidthSpec> inPortsSpec
 			, vector<WidthSpec> outPortsSpec
 			, Database* databasePtr
