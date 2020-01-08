@@ -138,7 +138,9 @@
     <ClInclude Include="src\Components\LogicUnit.hpp" />
     <ClInclude Include="src\Components\Data.hpp" />
     <ClInclude Include="src\Components\Module.hpp" />
+    <ClInclude Include="src\Components\ModuleTypeRepo.hpp" />
     <ClInclude Include="src\Components\Port.hpp" />
+    <ClInclude Include="src\Core\AppGraph.hpp" />
     <ClInclude Include="src\Define\Define.hpp" />
     <ClInclude Include="src\UserFunctions\UserFunctions.hpp" />
     <ClInclude Include="src\Util\Any.hpp" />

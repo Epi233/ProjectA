@@ -170,6 +170,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="src\ModuleTestResource\ModuleConnection.xml" />
     <Xml Include="src\ModuleTestResource\ModuleTestConfig1.xml" />
     <Xml Include="src\ModuleTestResource\ModuleTestConfig2.xml" />
   </ItemGroup>

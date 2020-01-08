@@ -7,7 +7,7 @@ using namespace tinyxml2;
 
 namespace ProjectA
 {
-	class DataTypeRepo
+	class DataTypeRepo : public NonCopyable, public NonMovable
 	{
 	public:
 		DataTypeRepo() = default;

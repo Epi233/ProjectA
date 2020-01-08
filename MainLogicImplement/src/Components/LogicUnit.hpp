@@ -44,7 +44,7 @@ namespace ProjectA
 			, uint64_t cycleCount
 			, ScriptFunction func)
 			: _dataBasePtr(databasePtr)
-			, _scriptPureLogic(func)
+			, _scriptFunction(func)
 		{
 			// create each inPort according to the inPortsSpec
 			for (auto i : inPortsSpec)
@@ -67,6 +67,11 @@ namespace ProjectA
 			
 		}
 
+		void setScriptFunction(ScriptFunction f)
+		{
+			_scriptFunction = f;
+		}
+
 		void run()
 		{
 			runInPorts();
@@ -85,7 +90,7 @@ namespace ProjectA
 			}
 			
 			// 执行脚本
-			receiveScript = _scriptPureLogic(sendScript, _dataBasePtr);
+			receiveScript = _scriptFunction(sendScript, _dataBasePtr);
 			
 			// 将脚本输出数据发送到cycleBuffer的准备区
 			setCycleBuffer(receiveScript);
@@ -150,7 +155,7 @@ namespace ProjectA
 		vector<Port> _outPorts;
 		Database* _dataBasePtr;
 		vector<CycleBuffer> _cycleBuffer;
-		ScriptFunction _scriptPureLogic;  // parameter list{ input data }; return output data;
+		ScriptFunction _scriptFunction;  // parameter list{ input data }; return output data;
 	};
 
 }
